@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Neues Login erstellen</title>
+    <p style="text-align: center"><a href="http://localhost:8090/sbb/v1/login_de">
+        <img src="https://static.meteoblue.com/assets/images/cityclimate/partner/sbb.png"
+             width="320" height="30" border="0" alt="Пример"></a></p>
+</head>
+<body>
+
+<div th:if="${error}" th:text="${error}"></div>
+
+<form th:action="@{/sbb/v1/registration-handler}" method="post">
+    <div>Neues Login erstellen:</div>
+    <input type="text" placeholder="Geben Sie Ihren Login..." name="login">
+    <input type="password" placeholder="Geben Sie Ihren Passwort..." name="password">
+    <input type="submit" value="Anmelden">
+</form>
+</body>
+</html>

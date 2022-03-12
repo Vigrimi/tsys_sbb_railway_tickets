@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Registrierungsformular</title>
+    <p style="text-align: center"><a href="http://localhost:8090/sbb/v1/">
+        <img src="https://static.meteoblue.com/assets/images/cityclimate/partner/sbb.png"
+             width="320" height="30" border="0" alt="Пример"></a></p>
+</head>
+<body>
+<div th:if="${failure}" th:text="${failure}"></div>
+<br>
+<form th:action="@{/sbb/v1/login-handler}" method="post"> <!-- .loginProcessingUrl("/login-handler")  -->
+    <input type="text" placeholder="Geben Sie Ihren Login..." name="login"> <!-- .usernameParameter("login")  -->
+    <input type="password" placeholder="Geben Sie Ihren Passwort..." name="password"> <!-- .passwordParameter("password")  -->
+    <input type="submit" value="Anmelden">
+</form>
+Zum ersten Mal hier? Neues Login erstellen.
+<a href="/sbb/v1/registration_de">Klicken um anmelden!</a>
+</body>
+</html>

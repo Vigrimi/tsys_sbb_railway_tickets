@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign-up new Admin form</title>
+    <p style="text-align: center"><a href="http://localhost:8090/sbb/v1/admin/account_admin_god">
+        <img src="https://static.meteoblue.com/assets/images/cityclimate/partner/sbb.png"
+             width="320" height="30" border="0" alt="Пример"></a></p>
+</head>
+<body>
+Личный кабинет ADMIN level God
+<!--<a href="/sbb/v1/logout">Выйти!</a>-->
+<form action="/sbb/v1/logout">
+    <button><img style="vertical-align: middle">
+        Ausgang! ** Выйти! ** Logout!
+    </button>
+    </p>
+</form>
+<div th:if="${error}" th:text="${error}"></div>
+<br>
+<form th:action="@{/sbb/v1/admin/registration_handler_newadmin}" method="post">
+    <div>New Admin registration:</div>
+    <input type="text" placeholder="Input your login..." name="login">
+    <input type="password" placeholder="Input your password..." name="password">
+    <input type="submit" value="Submit">
+</form>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>User account</title>
+    <p style="text-align: center">
+        <img src="https://static.meteoblue.com/assets/images/cityclimate/partner/sbb.png"
+             width="320" height="30" border="0" alt="Пример"></a></p>
+</head>
+<body>
+Личный кабинет
+<a href="/sbb/v1/logout">Выйти!</a>
+
+<div th:if="${error}" th:text="${error}"></div>
+
+<p> Добро пожаловать в личный кабинет пользователя USER! </p>
+
+</body>
+</html>

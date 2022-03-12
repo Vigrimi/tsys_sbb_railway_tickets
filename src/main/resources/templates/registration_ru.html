@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Форма регистрации нового пользователя</title>
+    <p style="text-align: center"><a href="http://localhost:8090/sbb/v1/login_ru">
+        <img src="https://static.meteoblue.com/assets/images/cityclimate/partner/sbb.png"
+             width="320" height="30" border="0" alt="Пример"></a></p>
+</head>
+<body>
+
+<div th:if="${error}" th:text="${error}"></div>
+
+<form th:action="@{/sbb/v1/registration-handler}" method="post">
+    <div>Регистрация нового пользователя:</div>
+    <input type="text" placeholder="Введите логин" name="login">
+    <input type="password" placeholder="Введите пароль" name="password">
+    <input type="submit" value="Регистрация">
+</form>
+</body>
+</html>

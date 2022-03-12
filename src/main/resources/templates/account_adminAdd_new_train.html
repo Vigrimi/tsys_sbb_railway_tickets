@@ -1,0 +1,43 @@
+<!--Добавление новых поездов-->
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавление новых поездов</title>
+    <p style="text-align: center"><a href="http://localhost:8090/sbb/v1/admin/account">
+        <img src="https://static.meteoblue.com/assets/images/cityclimate/partner/sbb.png"
+             width="320" height="30" border="0" alt="Пример"></a></p>
+</head>
+<body>
+Личный кабинет пользователя - <b>сотрудник компании с ролью "ADMIN"</b>
+<!--<a href="/sbb/v1/logout">Выйти!</a>-->
+<form action="/sbb/v1/logout">
+    <button><img style="vertical-align: middle">
+        Ausgang! ** Выйти! ** Logout!
+    </button>
+    </p>
+</form>
+<p style="text-align: center"><b>Добавление новых поездов</b></p>
+<!--<div th:if="${allstations}" th:text="${allstations}"></div><br>-->
+
+<!--строки таблицы с названиями всех станций-->
+<!--<table border="1" width="100%" cellpadding="5">
+    <tr th:each ="allstation : ${allstations}"> &lt;!&ndash;строки таблицы&ndash;&gt;
+        <td th:utext="${allstation}"></td>
+    </tr>
+</table><br>-->
+
+<div th:if="${result}" th:text="${result}"></div>
+<!--<div th:if="${success}" th:text="${success}"></div>-->
+<br>
+<form th:action="@{/sbb/v1/admin/account/add_new_train_handler}" method="post"> <!--type="number" min="0"-->
+    <!--<input size="35" type="text" placeholder="Введите номер поезда..." name="trainNumber">-->
+    <br>
+    <p style="text-align: left">Введите количество станций следования у нового поезда (минимум = 2, максимум = 10):</p>
+    <input size="35"
+                type="number" min="2" max="10" value="2" name="routeQtyStations">
+    <input type="submit" value="Отправить">
+</form>
+<br>
+</body>
+</html>

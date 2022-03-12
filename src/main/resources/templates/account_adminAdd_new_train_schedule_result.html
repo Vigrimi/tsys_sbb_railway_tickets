@@ -1,0 +1,35 @@
+<!--Добавление новых станций-->
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавление новых станций</title>
+    <p style="text-align: center"><a href="http://localhost:8090/sbb/v1/admin/account">
+        <img src="https://static.meteoblue.com/assets/images/cityclimate/partner/sbb.png"
+             width="320" height="30" border="0" alt="Пример"></a></p>
+</head>
+<body>
+Личный кабинет пользователя - <b>сотрудник компании с ролью "ADMIN"</b>
+<!--<a href="/sbb/v1/logout">Выйти!</a>-->
+<form action="/sbb/v1/logout">
+    <button><img style="vertical-align: middle">
+        Ausgang! ** Выйти! ** Logout!
+    </button>
+    </p>
+</form>
+<p style="text-align: center"><b>Добавление нового поезда и его маршрута следования.</b></p>
+<div th:if="${result}" th:text="${result}"></div>
+<br>
+<br>
+<br>
+<form action="/sbb/v1/admin/account/add_new_train">
+    <p style="text-align: center">
+        <img src="https://railcolornews.com/wp-content/uploads/stadlerrail_flirt_SOBVAE03stadlerrail.jpg"
+             width="240" height="160" alt="русски"> <br>
+        <button><img style="vertical-align: middle">
+            Добавить новый поезд с маршрутом
+        </button>
+    </p>
+</form>
+</body>
+</html>

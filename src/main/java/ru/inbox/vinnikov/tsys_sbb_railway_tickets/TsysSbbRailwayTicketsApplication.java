@@ -2,6 +2,7 @@ package ru.inbox.vinnikov.tsys_sbb_railway_tickets;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import java.time.LocalDateTime;
 
 /**
  *  some javadoc
@@ -11,8 +12,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class TsysSbbRailwayTicketsApplication {
 
+	public static org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(TsysSbbRailwayTicketsApplication.class);
+
 	public static void main(String[] args) {
+
+		LOGGER.info("\n ===============================> sbb tickets started -> " + LocalDateTime.now());
 		SpringApplication.run(TsysSbbRailwayTicketsApplication.class, args);
+		LOGGER.info("\n ===============================> sbb tickets finished -> " + LocalDateTime.now());
 	}
 
 }

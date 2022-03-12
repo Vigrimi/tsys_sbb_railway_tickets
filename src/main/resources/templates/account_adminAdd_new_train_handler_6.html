@@ -1,0 +1,73 @@
+<!--Добавление новых поездов-->
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавление новых поездов</title>
+    <p style="text-align: center"><a href="http://localhost:8090/sbb/v1/admin/account">
+        <img src="https://static.meteoblue.com/assets/images/cityclimate/partner/sbb.png"
+             width="320" height="30" border="0" alt="Пример"></a></p>
+</head>
+<body>
+Личный кабинет пользователя - <b>сотрудник компании с ролью "ADMIN"</b>
+<!--<a href="/sbb/v1/logout">Выйти!</a>-->
+<form action="/sbb/v1/logout">
+    <button><img style="vertical-align: middle">
+        Ausgang! ** Выйти! ** Logout!
+    </button>
+    </p>
+</form>
+<p style="text-align: center"><b>Добавление новых поездов</b></p>
+<!--<div th:if="${allstations}" th:text="${allstations}"></div><br>-->
+<table border="1" width="100%" cellpadding="5">
+    <tr th:each ="allstation : ${allstations}"> <!--строки таблицы-->
+        <td th:utext="${allstation}"></td>
+    </tr>
+</table><br>
+<table border="1" width="100%" cellpadding="5">
+    <tr th:each ="trainsname : ${trainsnames}"> <!--строки таблицы-->
+        <td th:utext="${trainsname}"></td>
+    </tr>
+</table><br>
+<div th:if="${result}" th:text="${result}"></div>
+<!--<div th:if="${success}" th:text="${success}"></div>-->
+<br>
+
+<table border="0" width="100%" cellpadding="5">
+
+    <tr th:each ="qtystation : ${qtystations}"> <!--строки таблицы-->
+        <p style="text-align: left">Количество станций у данного поезда: </p>
+        <td th:utext="${qtystation}"></td>
+    </tr>
+</table>
+<h3><!--Горизонтальная линия HTML-->
+    <hr width="75%" color="#2F73B6" align="left" size="5">
+</h3><br>
+<form th:action="@{/sbb/v1/admin/account/add_new_train_handler_schedule_handler}" method="post"> <!--type="number" min="0"-->
+    Номер поезда: <input size="35" type="text" placeholder="Введите номер поезда..." name="trainNumber"><br>
+    <p style="text-align: left">Введите количество мест в поезде (минимум = 0, максимум = 2 млрд):</p>
+    <input size="35"
+           type="number" min="0" max="2000000000" value="0" name="passengersCapacity"><br><br>
+    <!--6 СТАНЦИИ!!!!-->
+    Станции: <br>
+    <input size="30" type="text" placeholder="Введите станцию отправления..." name="beginstation"><br>
+    <input size="45" type="text" placeholder="Введите время отправления в формате 24ч hh:mm ..." name="beginstation_time"><br><br>
+    <input size="30" type="text" placeholder="Введите среднюю станцию №1 ..." name="middle1station"><br>
+    <input size="45" type="text" placeholder="Введите время прибытия в формате 24ч hh:mm ..." name="middle1station_timearr">
+    <input size="45" type="text" placeholder="Введите время отправления в формате 24ч hh:mm ..." name="middle1station_timedep"><br><br>
+    <input size="30" type="text" placeholder="Введите среднюю станцию №2 ..." name="middle2station"><br>
+    <input size="45" type="text" placeholder="Введите время прибытия в формате 24ч hh:mm ..." name="middle2station_timearr">
+    <input size="45" type="text" placeholder="Введите время отправления в формате 24ч hh:mm ..." name="middle2station_timedep"><br><br>
+    <input size="30" type="text" placeholder="Введите среднюю станцию №3 ..." name="middle3station"><br>
+    <input size="45" type="text" placeholder="Введите время прибытия в формате 24ч hh:mm ..." name="middle3station_timearr">
+    <input size="45" type="text" placeholder="Введите время отправления в формате 24ч hh:mm ..." name="middle3station_timedep"><br><br>
+    <input size="30" type="text" placeholder="Введите среднюю станцию №4 ..." name="middle4station"><br>
+    <input size="45" type="text" placeholder="Введите время прибытия в формате 24ч hh:mm ..." name="middle4station_timearr">
+    <input size="45" type="text" placeholder="Введите время отправления в формате 24ч hh:mm ..." name="middle4station_timedep"><br><br>
+    <input size="30" type="text" placeholder="Введите последнюю станцию..." name="endstation"><br>
+    <input size="45" type="text" placeholder="Введите время прибытия в формате 24ч hh:mm ..." name="endstation_time"><br><br>
+    <input type="submit" value="Отправить">
+</form>
+<br>
+</body>
+</html>

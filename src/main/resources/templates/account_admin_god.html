@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin account GOD</title>
+    <p style="text-align: center">
+        <img src="https://static.meteoblue.com/assets/images/cityclimate/partner/sbb.png"
+             width="320" height="30" border="0" alt="Пример"></a></p>
+</head>
+<body>
+Личный кабинет ADMIN level God
+<!--<a href="/sbb/v1/logout">Выйти!</a>-->
+<form action="/sbb/v1/logout">
+       <button><img style="vertical-align: middle">
+           Ausgang! ** Выйти! ** Logout!
+        </button>
+    </p>
+</form>
+<br>
+<div th:if="${error}" th:text="${error}"></div>
+<br>
+<form action="/sbb/v1/admin/account">
+    <p style="text-align: center">
+        <button><img style="vertical-align: middle">
+            Перейти в личный кабинет сотрудника
+        </button>
+    </p>
+</form>
+<br>
+<p><b> Добро пожаловать в личный кабинет пользователя ADMIN level God! </b><br>
+Здесь Вы можете только добавить нового пользователя - <b>сотрудника компании с ролью "Админ"</b>,
+    который в дальнейшем имеет право выполнять следующие функции: <br>
+    * добавление новых станций; <br>
+    * добавление новых поездов; <br>
+    * просмотр всех пассажиров, зарегистрированных на определённый поезд; <br>
+    * просмотр всех поездов; <br>
+</p>
+<br>
+<br>
+<form action="/sbb/v1/admin/registration_new_admin">
+    <p style="text-align: center">
+        <img src="https://ichip.ru/images/cache/2020/4/13/fit_960_530_false_crop_2047_1151_0_27_q90_399272_2d6ddc38e0a0dc76bee153b60.png"
+             width="140" height="100" alt="русски"> <br>
+        <button><img style="vertical-align: middle">
+            Registrierung eines neuen Mitarbeiters<br>
+            Зарегистрировать нового сотрудника<br>
+            Register a new employee
+        </button>
+    </p>
+</form>
+</body>
+</html>

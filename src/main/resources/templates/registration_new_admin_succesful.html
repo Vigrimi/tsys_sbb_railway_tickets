@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin account GOD</title>
+    <p style="text-align: center"><a href="http://localhost:8090/sbb/v1/admin/account_admin_god">
+        <img src="https://static.meteoblue.com/assets/images/cityclimate/partner/sbb.png"
+             width="320" height="30" border="0" alt="Пример"></a></p>
+</head>
+<body>
+Личный кабинет ADMIN level God
+<!--<a href="/sbb/v1/logout">Выйти!</a>-->
+<form action="/sbb/v1/logout">
+    <button><img style="vertical-align: middle">
+        Ausgang! ** Выйти! ** Logout!
+    </button>
+    </p>
+</form>
+
+<b><div th:if="${error}" th:text="${error}"></div></b>
+<br>
+<p>Новый пользователь - сотрудник компании с ролью "Админ" <b>был успешно добавлен!</b></p>
+<br>
+<br>
+<form action="/sbb/v1/admin/registration_new_admin">
+    <p style="text-align: center">
+        <img src="https://ichip.ru/images/cache/2020/4/13/fit_960_530_false_crop_2047_1151_0_27_q90_399272_2d6ddc38e0a0dc76bee153b60.png"
+             width="140" height="100" alt="русски"> <br>
+        <button><img style="vertical-align: middle">
+            Registrierung eines neuen Mitarbeiters<br>
+            Зарегистрировать нового сотрудника<br>
+            Register a new employee
+        </button>
+    </p>
+</form>
+
+</body>
+</html>

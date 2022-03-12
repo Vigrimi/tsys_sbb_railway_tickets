@@ -1,0 +1,56 @@
+<!--Просмотр всех пассажиров, зарегистрированных на поезд-->
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Просмотр всех пассажиров, зарегистрированных на поезд</title>
+    <p style="text-align: center"><a href="http://localhost:8090/sbb/v1/admin/account">
+        <img src="https://static.meteoblue.com/assets/images/cityclimate/partner/sbb.png"
+             width="320" height="30" border="0" alt="Пример"></a></p>
+</head>
+<body>
+Личный кабинет пользователя - <b>сотрудник компании с ролью "ADMIN"</b>
+<form action="/sbb/v1/logout">
+    <button><img style="vertical-align: middle">
+        Ausgang! ** Выйти! ** Logout!
+    </button>
+    </p>
+</form>
+<table border="0" width="35%" cellpadding="5">
+    <tr> <!--строки таблицы-->
+    <tr> <!--заголовок таблицы-->
+        <th><p style="text-align: left">Просмотр всех пассажиров, зарегистрированных на поезд №</p></th>
+    <th>
+        <form action="/sbb/v1/admin/account/find_all_passengers_in_one_train">
+            <p style="text-align: center">
+                <button><img style="vertical-align: middle">Проверить другой номер поезда</button>
+            </p>
+        </form>
+    </th>
+    </tr>
+        <td>
+            <b><div style="text-align: center" th:if="${trainnumber}" th:text="${trainnumber}"></div></b>
+        </td>
+    <td></td>
+    </tr>
+</table>
+<br>
+<div th:if="${result}" th:text="${result}"></div>
+<br>
+<table border="1" width="100%" cellpadding="5">
+    <tr>
+        <!--заголовок таблицы-->
+        <th>№ п/п</th>
+        <th>Номер билета</th>
+        <th>Имя пассажира</th>
+        <th>Фамилия пассажира</th>
+    </tr>
+    <tr th:each ="passenger : ${passengers}"> <!--строки таблицы-->
+        <td th:utext="${passenger.numberInOrder}"></td><!--№ п/п-->
+        <td th:utext="${passenger.ticketId}"></td><!--Номер билета-->
+        <td th:utext="${passenger.passengerName}"></td><!--Имя пассажира-->
+        <td th:utext="${passenger.passengerSurname}"></td><!--Фамилия пассажира-->
+    </tr>
+</table>
+</body>
+</html>

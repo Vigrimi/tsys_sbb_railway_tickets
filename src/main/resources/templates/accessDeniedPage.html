@@ -1,0 +1,18 @@
+<!--accessDeniedPage.html-->
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:font-size="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Access Denied Page</title>
+    <p style="text-align: center">
+        <img src="https://static.meteoblue.com/assets/images/cityclimate/partner/sbb.png"
+             width="320" height="30" border="0" alt="Пример"></p>
+</head>
+<body>
+<font size="20" color="red"><b>
+<p style="text-align: center" th:if="${access}" th:text="${access}"></p></b></font>
+<p style="text-align: center">
+<img src="https://i.pinimg.com/originals/48/cf/b1/48cfb12514cd0ec6b5096a0bc9692834.png"
+     width="400" height="400" border="0" alt="accessDenied"></p>
+</body>
+</html>

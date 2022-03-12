@@ -1,0 +1,41 @@
+<!--Просмотр всех поездов-->
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Просмотр всех поездов</title>
+    <p style="text-align: center"><a href="http://localhost:8090/sbb/v1/admin/account">
+        <img src="https://static.meteoblue.com/assets/images/cityclimate/partner/sbb.png"
+             width="320" height="30" border="0" alt="Пример"></a></p>
+</head>
+<body>
+Личный кабинет пользователя - <b>сотрудник компании с ролью "ADMIN"</b>
+<!--<a href="/sbb/v1/logout">Выйти!</a>-->
+<form action="/sbb/v1/logout">
+    <button><img style="vertical-align: middle">
+        Ausgang! ** Выйти! ** Logout!
+    </button>
+    </p>
+</form>
+<div th:if="${error}" th:text="${error}"></div>
+<p style="text-align: center"><b>Просмотр всех поездов</b></p>
+<br>
+<table border="1" width="100%" cellpadding="5">
+    <tr>
+        <!--заголовок таблицы-->
+        <th>Id поезда</th>
+        <th>Версия изменений</th>
+        <th>Номер поезда</th>
+        <th>Количество мест</th>
+    </tr>
+    <tr th:each ="train : ${trains}"> <!--строки таблицы-->
+        <td th:utext="${train.id}"></td><!--Айди поезда-->
+        <td th:utext="${train.version}"></td><!--Версия изменений-->
+        <td th:utext="${train.numberTrain_nummerZug}"></td><!--Номер поезда-->
+        <td th:utext="${train.passengersCapacity_passagierkapazitat}"></td><!--Количество мест-->
+    </tr>
+</table>
+<br>
+<br>
+</body>
+</html>
