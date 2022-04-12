@@ -15,7 +15,7 @@ public class RailwayStationBahnhof extends SuperclassForEntity {
 
     // название жд станции
     @Column(name = "name_rwstation_bahnhof", nullable = false, unique = true)
-    private String name_RailwayStation_Bahnhof;
+    private String nameRailwayStationBahnhof;
 
     // номера поездов с остановками на этой станции
 //    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "stationsSequence_stationenSequenz")
@@ -24,8 +24,8 @@ public class RailwayStationBahnhof extends SuperclassForEntity {
 
     @Override
     public String toString() {
-        return "RailwayStation_Bahnhof{" + "id='" + getId() + '\'' + ", version='" + getVersion() + '\'' +
-                ", name_RailwayStation_Bahnhof='" + name_RailwayStation_Bahnhof + '\'' +
+        return "\nRailwayStation_Bahnhof{" + "id='" + getId() + '\'' + ", version='" + getVersion() + '\'' +
+                ", name_RailwayStation_Bahnhof='" + nameRailwayStationBahnhof + '\'' +
                 '}';
     }
 }
