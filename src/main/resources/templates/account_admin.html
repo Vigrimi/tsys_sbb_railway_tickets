@@ -3,6 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Admin account</title>
+    <style>
+        html.body{
+        width: 100%;
+        height: 100%;
+        }
+    </style>
     <p style="text-align: center">
         <img src="https://static.meteoblue.com/assets/images/cityclimate/partner/sbb.png"
              width="320" height="30" border="0" alt="Пример"></a></p>
@@ -11,19 +17,20 @@
 Личный кабинет
 <!--<a href="/sbb/v1/logout">Выйти!</a>-->
 <form action="/sbb/v1/logout">
-    <button><img style="vertical-align: middle">Ausgang! ** Выйти! ** Logout!</button>
+    <button><img style="vertical-align: middle">Выйти!</button>
 </form>
 <br>
 
 <div th:if="${error}" th:text="${error}"></div>
 
-<p><b> Добро пожаловать в личный кабинет пользователя - сотрудник компании с ролью "ADMIN"! </b></p>
+<p style="text-align: center"><b> Добро пожаловать в личный кабинет пользователя - сотрудник компании с ролью "ADMIN"! </b></p>
+
 <form action="/sbb/v1/admin/account/find_all_passengers_in_one_train">
     <p style="text-align: center">
     <button><img style="vertical-align: middle">Просмотр всех пассажиров, зарегистрированных на поезд</button></p>
 </form>
 <form action="/sbb/v1/admin/account/add_new_rwstation">
-    <p style="text-align: left">
+    <p style="text-align: center">
     <button><img style="vertical-align: middle">Добавление новых станций</button></p>
 </form>
 <form action="/sbb/v1/admin/account/add_new_train">
@@ -31,7 +38,7 @@
     <button><img style="vertical-align: middle">Добавление новых поездов</button></p>
 </form>
 <form action="/sbb/v1/admin/account/find_all_trains">
-    <p style="text-align: right">
+    <p style="text-align: center">
     <button><img style="vertical-align: middle">Просмотр всех поездов</button></p>
 </form>
 </body>
