@@ -1,0 +1,76 @@
+:root {
+    --first-color: #e2859a;
+    --second-color: #575e97;
+    --third-color: #ffbb00;
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(to bottom, #FF11FF, #FF1493);
+}
+
+section {
+    position: relative;
+    display: flex;
+    -webkit-box-reflect: below 1px linear-gradient(transparent,transparent,#000);
+}
+
+.box {
+    position: relative;
+    width: 300px;
+    height: 400px;
+    margin: 0 20px;
+    background: linear-gradient(45deg, var(--first-color) 25%, var(--second-color) 25%, var(--second-color) 50%, var(--first-color) 50%, var(--first-color) 75%, var(--second-color) 75%, var(--second-color) 100%);
+    background-size: 40px 40px;
+    filter: grayscale(1);
+    border-radius: 20px;
+    animation: animate 1.5s linear infinite;
+    animation-play-state: paused;
+    transform: filter .5s ease-in;
+    display: flex;
+    justify-content: center;
+}
+
+.box:nth-child(2){
+    background: linear-gradient(135deg,var(--third-color) 25%, var(--second-color) 25%, var(--second-color) 50%, var(--third-color) 50%, var(--third-color) 75%, var(--second-color) 75%, var(--second-color) 100%);
+    background-size: 40px 40px;
+}
+
+.box:hover {
+    animation-play-state: running;
+    filter: grayscale(0);
+}
+
+@keyframes animate{
+    0%{
+        background-position: 0;
+    }
+    100%{
+        background-position: 40px;
+    }
+}
+
+.box img {
+    position: absolute;
+    bottom: 100px;
+    width: 90%;
+    height: 50%;
+    left: 15px;
+    transition: height .5s ease-out;
+    border-radius: 20px;
+
+}
+
+.box:hover img{
+    height: 53%;
+    /*width: 91%;*/
+}

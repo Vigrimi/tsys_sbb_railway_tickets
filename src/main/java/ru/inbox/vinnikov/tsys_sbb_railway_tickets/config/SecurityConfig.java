@@ -2,6 +2,7 @@ package ru.inbox.vinnikov.tsys_sbb_railway_tickets.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -11,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import ru.inbox.vinnikov.tsys_sbb_railway_tickets.service.CustomUserDetailsService;
 
+@Configuration
 @EnableWebSecurity//(debug = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private CustomUserDetailsService userDetailsService;
@@ -24,9 +26,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers("/sbb/v1/admin/**").access("hasRole('ADMIN')")
-//                .antMatchers("/sbb/v1/user/**").access("hasRole('USER')")
-                .antMatchers("/sbb/v1/user/**").access("hasAnyRole('USER', 'ADMIN')")
-                .antMatchers("/**").permitAll()
+                .antMatchers("/sbb/v1/user/**").access("hasRole('USER')")
+//                .antMatchers("/sbb/v1/user/**").access("hasAnyRole('USER', 'ADMIN')")
+                .antMatchers("/**", "/css/**","/images/**","/js/**").permitAll()
 // три строки выше - это какие запросы каким ролям доступны
     // а строки ниже - это всё что связано со входом и выходом
                 .and().formLogin().permitAll()  //login configuration - форма входа доступна всем
@@ -64,8 +66,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public PasswordEncoder passwordEncoder()
     { // нужен если в нашей таблице БД пароли хранятся в зашифрованном виде - так и должно быть
-        BCryptPasswordEncoder b = new BCryptPasswordEncoder();
+        //BCryptPasswordEncoder b = new BCryptPasswordEncoder();
         //System.out.println("******------8888 Encoder:" + b);
-        return b;
+        return new BCryptPasswordEncoder();
     }
 }
