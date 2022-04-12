@@ -9,84 +9,50 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.inbox.vinnikov.tsys_sbb_railway_tickets.dto.PassengerInOneTrainDto;
+import ru.inbox.vinnikov.tsys_sbb_railway_tickets.dto.ResultDto;
 import ru.inbox.vinnikov.tsys_sbb_railway_tickets.entity.MyUser;
 import ru.inbox.vinnikov.tsys_sbb_railway_tickets.entity.RailwayStationBahnhof;
 import ru.inbox.vinnikov.tsys_sbb_railway_tickets.repository.RoleRepository;
 import ru.inbox.vinnikov.tsys_sbb_railway_tickets.repository.TrainRepository;
 import ru.inbox.vinnikov.tsys_sbb_railway_tickets.repository.UserRepository;
-import ru.inbox.vinnikov.tsys_sbb_railway_tickets.service.ControllerService;
+import ru.inbox.vinnikov.tsys_sbb_railway_tickets.service.*;
+
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static ru.inbox.vinnikov.tsys_sbb_railway_tickets.TsysSbbRailwayTicketsApplication.LOGGER;
 
 @Controller
 @RequestMapping("/sbb/v1/admin")
 public class AdminController {
-    @Value("${admin.levelgod}")
-    private String adminLevelGod;
     private String allStationsNames;
     private String allTrainsNumbers;
     private int inputedRouteQtyStations;
-    private final String[] resultArrAddNewRwSt = {"0"
-            ,"ОШИБКА! Название станции не указано!"
-            ,"ОШИБКА! Название такой станции уже есть в базе!"
-            ,"ПОЗДРАВЛЯЕМ! Новое название станции успешно сохранено в базе!"
-            ,"ОШИБКА! Что-то пошло не так %() название станции НЕ сохранилось в базе!"};
-    private final String[] resultArrAddNewTrainSchedule = {
-            "ПОЗДРАВЛЯЕМ! Новый поезд удачно сохранён в базу! Расписание и маршрут следования нового поезда также удачно сохранены в базу!"
-            ,"ОШИБКА! Номер поезда не указан!"
-            ,"ОШИБКА! Номер такого поезда уже есть в базе!"
-            ,"ПОЗДРАВЛЯЕМ! Новый поезд успешно сохранён в базе!"
-            ,"ОШИБКА! Что-то пошло не так >%() Поезд НЕ сохранился в базе!" // 4
-            ,"ОШИБКА! Вы не ввели станцию отправления!" // errorNoDepartSt = 5;
-            ,"ОШИБКА! Введённая следующая после отправления станция не найдена в базе!" // errorNoNextFmDepartSt = 6;
-            ,"ОШИБКА! Введённое время отправления со станции отправления введено в неправильном формате!" // errorTimeDepartSt = 7;
-            ,"ОШИБКА! Введённое время прибытия на промежуточную станцию введено в неправильном формате!" // errorArrTimeMidSt = 8;
-            ,"ОШИБКА! Введённое время отправления с промежуточной станции введено в неправильном формате!" // errorDepTimeMidSt = 9;
-            ,"ОШИБКА! Введённое время прибытия на промежуточную станцию находится вне суток (должно быть в интервале 00:00 - 23:59)!" // errorMidStArrTimeOutOf24h = 10;
-            ,"ОШИБКА! Введённое время отправления с промежуточной станции находится вне суток (должно быть в интервале 00:00 - 23:59)!" // errorMidStDepTimeOutOf24h = 11;
-            ,"ОШИБКА! Введённое время отправления с промежуточной станции раньше, чем время прибытия!" // errorWrongArrDepTimeMidSt = 12;
-            ,"ОШИБКА! Введённое время отправления со станции отправления находится вне суток (должно быть в интервале 00:00 - 23:59)!" // errorDepStTimeDepOutOf24h = 13;
-            ,"ОШИБКА! Введённая станция отправления не найдена в базе!" // errorNoDepartStDB = 14;
-            ,"ОШИБКА! Вы не ввели время отправления со станции отправления!" // errorNoDepartStTime = 15;
-            ,"ОШИБКА! Что-то пошло не так с введённым временем отправления по станции отправления!" // errorMystiqueTimeDep = 16;
-            ,"ОШИБКА! Вы не ввели время прибытия у промежуточной станции!" // errorNoMidStDepTime = 17;
-            ,"ОШИБКА! Вы не ввели время отправления у промежуточной станции!" // errorNoMidStArrTime = 18;
-            ,"ОШИБКА! Вы не ввели конечную станцию!" // errorNoEndSt = 19;
-            ,"ОШИБКА! Введённая последовательность станций неправильная: две станции назначения подряд не могут быть одинаковыми!" // errorTwoEqualSt = 20;
-            ,"ОШИБКА! Вы не ввели время прибытия на конечную станцию!" // errorNoEndStTime = 21;
-            ,"ОШИБКА! Введённое время прибытия на конечную станцию введено в неправильном формате!" // errorTimeEndSt = 22;
-            ,"ОШИБКА! Вы не ввели следующую после отправления станцию!" // errorNoDepNextFmDepartSt = 23;
-            ,"ОШИБКА! Вы не ввели промежуточную станцию!" // errorNoMidNextFmDepartSt = 24;
-            ,"ОШИБКА! Что-то пошло не так %() Поезд и его маршрут НЕ сохранились в базе!" // errorMystique = 25;
-            ,"ОШИБКА! Что-то пошло не так с введённым временем прибытия и отправления по промежуточной станции!" // errorMystiqueTime = 26;
-            ,"ОШИБКА! Что-то пошло не так с введённым временем прибытия на конечную станцию!" // errorMystiqueTimeArr = 27;
-            ,"ОШИБКА! Введённое время прибытия на конечную станцию находится вне суток (должно быть в интервале 00:00 - 23:59)!" // errorArrStTimeDepOutOf24h = 28;
-    };
-
-    private UserRepository userRepository;
-    private RoleRepository roleRepository;
-    private TrainRepository trainRepository;
-    private PasswordEncoder encoder;
-    private ControllerService controllerService;
+    private final String[] resultArrAddNewRwSt = {"0","ОШИБКА! Название станции не указано!","ОШИБКА! Название такой станции уже есть в базе!","ПОЗДРАВЛЯЕМ! Новое название станции успешно сохранено в базе!","ОШИБКА! Что-то пошло не так %() название станции НЕ сохранилось в базе!"};
+    private final String[] resultArrAddNewTrainSchedule = {"ПОЗДРАВЛЯЕМ! Новый поезд удачно сохранён в базу! Расписание и маршрут следования нового поезда также удачно сохранены в базу!","ОШИБКА! Номер поезда не указан!","ОШИБКА! Номер такого поезда уже есть в базе!","ПОЗДРАВЛЯЕМ! Новый поезд успешно сохранён в базе!","ОШИБКА! Что-то пошло не так >%() Поезд НЕ сохранился в базе!" /*// 4*/,"ОШИБКА! Вы не ввели станцию отправления!" /*// errorNoDepartSt = 5;*/,"ОШИБКА! Введённая следующая после отправления станция не найдена в базе!" /*// errorNoNextFmDepartSt = 6;*/,"ОШИБКА! Введённое время отправления со станции отправления введено в неправильном формате!" /*// errorTimeDepartSt = 7;*/,"ОШИБКА! Введённое время прибытия на промежуточную станцию введено в неправильном формате!" /*// errorArrTimeMidSt = 8;*/,"ОШИБКА! Введённое время отправления с промежуточной станции введено в неправильном формате!" /*// errorDepTimeMidSt = 9;*/,"ОШИБКА! Введённое время прибытия на промежуточную станцию находится вне суток (должно быть в интервале 00:00 - 23:59)!" /*// errorMidStArrTimeOutOf24h = 10;*/,"ОШИБКА! Введённое время отправления с промежуточной станции находится вне суток (должно быть в интервале 00:00 - 23:59)!" /*// errorMidStDepTimeOutOf24h = 11;*/,"ОШИБКА! Введённое время отправления с промежуточной станции раньше, чем время прибытия!" /*// errorWrongArrDepTimeMidSt = 12;*/,"ОШИБКА! Введённое время отправления со станции отправления находится вне суток (должно быть в интервале 00:00 - 23:59)!" /*// errorDepStTimeDepOutOf24h = 13;*/,"ОШИБКА! Введённая станция отправления не найдена в базе!" /*// errorNoDepartStDB = 14;*/,"ОШИБКА! Вы не ввели время отправления со станции отправления!" /*// errorNoDepartStTime = 15;*/,"ОШИБКА! Что-то пошло не так с введённым временем отправления по станции отправления!" /*// errorMystiqueTimeDep = 16;*/,"ОШИБКА! Вы не ввели время прибытия у промежуточной станции!" /*// errorNoMidStDepTime = 17;*/,"ОШИБКА! Вы не ввели время отправления у промежуточной станции!" /*// errorNoMidStArrTime = 18;*/,"ОШИБКА! Вы не ввели конечную станцию!" /*// errorNoEndSt = 19;*/,"ОШИБКА! Введённая последовательность станций неправильная: две станции назначения подряд не могут быть одинаковыми!" /*// errorTwoEqualSt = 20;*/,"ОШИБКА! Вы не ввели время прибытия на конечную станцию!" /*// errorNoEndStTime = 21;*/,"ОШИБКА! Введённое время прибытия на конечную станцию введено в неправильном формате!" /*// errorTimeEndSt = 22;*/,"ОШИБКА! Вы не ввели следующую после отправления станцию!" /*// errorNoDepNextFmDepartSt = 23;*/,"ОШИБКА! Вы не ввели промежуточную станцию!" /*// errorNoMidNextFmDepartSt = 24;*/,"ОШИБКА! Что-то пошло не так %() Поезд и его маршрут НЕ сохранились в базе!" /*// errorMystique = 25;*/,"ОШИБКА! Что-то пошло не так с введённым временем прибытия и отправления по промежуточной станции!" /*// errorMystiqueTime = 26;*/,"ОШИБКА! Что-то пошло не так с введённым временем прибытия на конечную станцию!" /*// errorMystiqueTimeArr = 27;*/,"ОШИБКА! Введённое время прибытия на конечную станцию находится вне суток (должно быть в интервале 00:00 - 23:59)!" /*// errorArrStTimeDepOutOf24h = 28;*/};
+    private final TrainRepository trainRepository;
+    private final TrainService trainService;
+    private final RwStationService rwStationService;
+    private final PassengerService passengerService;
+    private final AdminService adminService;
 
     @Autowired
-    public AdminController(UserRepository userRepository, RoleRepository roleRepository, TrainRepository trainRepository
-            , PasswordEncoder encoder, ControllerService controllerService)
+    public AdminController(TrainRepository trainRepository,TrainService trainService,RwStationService rwStationService
+            ,PassengerService passengerService,AdminService adminService)
     {
-        this.userRepository = userRepository;
         this.trainRepository = trainRepository;
-        this.roleRepository = roleRepository;
-        this.encoder = encoder;
-        this.controllerService = controllerService;
+        this.trainService = trainService;
+        this.rwStationService = rwStationService;
+        this.passengerService = passengerService;
+        this.adminService = adminService;
     }
 
     //------------ admin employee ---------------------------------------
     @GetMapping("/account")
-    public String adminAccount(Principal principal)
+    public String adminAccount()
     {
         //"account_admin"; or "redirect:/sbb/v1/admin/account_admin_god"
         return "account_admin";
@@ -94,51 +60,36 @@ public class AdminController {
 
     // Просмотр всех пассажиров, зарегистрированных на поезд
     @GetMapping("/account/find_all_passengers_in_one_train")
-    public String findAllPassengersInOneTrain(Model model /*Principal principal*/)
+    public String findAllPassengersInOneTrain(Model model)
     {
+        //список актуальных номеров поездов
+        allTrainsNumbers = trainService.getAllTrainsNumbersStr();
+        model.addAttribute("trainsnames", allTrainsNumbers);
         return "account_adminFind_all_passengers_in_one_train";
-    }
-    @PostMapping("/account/find_all_passengers_in_one_train_handler") // Просмотр всех пассажиров, зарегистрированных на поезд
-    public String findAllPassengersInOneTrainHandler(String trainNumber, Model model /*Principal principal*/)
-    {
-//        System.out.println("------контроллер------------trainZug:" + trainNumber);
-        //--trainZug:пустой    если пустой запрос
-        if (trainNumber.isEmpty() || trainNumber.isBlank()){
-            model.addAttribute("result","ВНИМАНИЕ! Вы не ввели номер поезда. Выполнение запроса " +
-                    "невозможно!");
-        } else {
-            model.addAttribute("trainnumber", trainNumber);
-
-            ArrayList<PassengerInOneTrainDto> passengerInOneTrainDtoArrayList =
-                    controllerService.serviceFindAllPassengersInOneTrainHandler(trainNumber);
-            if (!passengerInOneTrainDtoArrayList.isEmpty() &&
-                    passengerInOneTrainDtoArrayList.get(0).getNumberInOrder() == -1){
-                model.addAttribute("result","ВНИМАНИЕ! Был введён номер несуществующего поезда. " +
-                        "Выполнение запроса невозможно!");
-            } else
-            if (passengerInOneTrainDtoArrayList.isEmpty()){
-                model.addAttribute("result","ВНИМАНИЕ! На данный поезд не зарегистрированно ни " +
-                        "одного пассажира!");
-            } else {
-                model.addAttribute("passengers",passengerInOneTrainDtoArrayList);
-            }
-        }
+    } // Просмотр всех пассажиров, зарегистрированных на поезд
+    @PostMapping("/account/find_all_passengers_in_one_train_handler")
+    public String findAllPassengersInOneTrainHandler(String trainNumber,String departureDate,Model model){
+        ResultDto resultDto = passengerService.serviceFindAllPassengersInOneTrainHandler(trainNumber,departureDate);
+        model.addAttribute("trainnumber", trainNumber);
+        model.addAttribute("result",resultDto.getResultsEnumList());
+        model.addAttribute("passengers",resultDto.getPassengerInOneTrainDtoList());
         return "account_adminFind_all_passengers_in_one_train_handler";
     }
 
     // Добавление новых станций
     @GetMapping("/account/add_new_rwstation")
-    public String addNewRwStation(/*Principal principal*/ Model model)
+    public String addNewRwStation(Model model)
     {
-        allStationsNames = controllerService.getAllStationsNamesStr();
+        allStationsNames = rwStationService.getAllStationsNamesStr();
         model.addAttribute("allstations", allStationsNames);
         return "account_adminAdd_new_rwstation";
     }
     @PostMapping("/account/add_new_rwstation_handler")
     public String addNewRwStationHandler(String rwstationName, Model model)
     {
-        int result = controllerService.serviceAddNewRwstationNameHandler(rwstationName);
-        if (result == 3) allStationsNames = controllerService.getAllStationsNamesStr();
+        // TODO исправить на ResultDTO
+        int result = rwStationService.serviceAddNewRwstationNameHandler(rwstationName);
+        if (result == 3) allStationsNames = rwStationService.getAllStationsNamesStr();
         model.addAttribute("result", resultArrAddNewRwSt[result]);
         model.addAttribute("allstations", allStationsNames);
         return "account_adminAdd_new_rwstation";
@@ -146,14 +97,14 @@ public class AdminController {
 
     // Добавление новых поездов: надо ввести НОМЕР ПОЕЗДА и ВМЕСТИМОСТЬ
     @GetMapping("/account/add_new_train")
-    public String addNewTrain(Model model)
+    public String addNewTrain()
     {
-        allStationsNames = controllerService.getAllStationsNamesStr();
-        allTrainsNumbers = controllerService.getAllTrainsNumbersStr();
+        allStationsNames = rwStationService.getAllStationsNamesStr();
+        allTrainsNumbers = trainService.getAllTrainsNumbersStr();
         return "account_adminAdd_new_train";
     }
     @PostMapping("/account/add_new_train_handler") // ввести количество станций в маршруте поезда
-    public String addNewTrainHandler(int routeQtyStations, Model model)
+    public String addNewTrainHandler(int routeQtyStations)
     {
         System.out.println("----add_new_train_handler-------routeQtyStations:" + routeQtyStations);
         inputedRouteQtyStations = routeQtyStations;
@@ -165,8 +116,8 @@ public class AdminController {
         model.addAttribute("allstations", allStationsNames);
         model.addAttribute("trainsnames", allTrainsNumbers);
         model.addAttribute("qtystations", inputedRouteQtyStations);
-        System.out.println("--------5---allStationsNames:" + allStationsNames);
-        System.out.println("--------6---model:" + model.toString());
+//        System.out.println("--------5---allStationsNames:" + allStationsNames);
+//        System.out.println("--------6---model:" + model.toString());
         return "account_adminAdd_new_train_handler_" + inputedRouteQtyStations;
     }
     @PostMapping("/account/add_new_train_handler_schedule_handler") // проверка поезда и маршрута, внесение в БД
@@ -194,7 +145,7 @@ public class AdminController {
                 endstation,endstation_time};
         System.out.println("--------------------String[] inputedData:" + Arrays.toString(inputedData));
 
-        int result = controllerService.serviceAddNewTrainHandler
+        int result = trainService.serviceAddNewTrainHandler
                 (trainNumber, passengersCapacity, inputedData,inputedRouteQtyStations);
         model.addAttribute("result", resultArrAddNewTrainSchedule[result]);
         //return "account_adminAdd_new_train_handler_" + inputedRouteQtyStations;
@@ -205,85 +156,30 @@ public class AdminController {
     @GetMapping("/account/find_all_trains")
     public String findAllTrains(Model model)
     {
-        LOGGER.info("------------------------trainRepository.findAll() started -> " + LocalDateTime.now());
+//        LOGGER.info("------------------------trainRepository.findAll() started -> " + LocalDateTime.now());
         model.addAttribute("trains",trainRepository.findAll());
-        LOGGER.info("------------------------trainRepository.findAll() finished -> " + LocalDateTime.now());
+//        LOGGER.info("------------------------trainRepository.findAll() finished -> " + LocalDateTime.now());
         return "account_adminFind_all_trains";
     }
 
     //------------ admin_god --------------------------------------------
-    @GetMapping("/account_admin_god") // для расширенной работы с пользовательскими сессиями есть
-    // пакет session api spring boot
+    @GetMapping("/account_admin_god")
     public String adminGodAccount(Principal principal)
     {
-        String whereToGo = "account_admin_god";
-        // если админ не уровня бог, то редирект на error
-        if (!principal.getName().equals(adminLevelGod)){
-            whereToGo = "redirect:/sbb/v1/error";
-        }
-        return whereToGo;
+        return adminService.whereToGoIfAdminGoesIntoAdminLevelGod(principal,"account_admin_god"); //whereToGo;
     }
 
     @GetMapping("/registration_new_admin")
-    public String getRegistrationNewAdminForm(Model model,Principal principal) // тип данных Model используется, чтобы передать полученные
-    // данные в хтмл-страничку. Чтобы переданные Моделом данные вывести в хтмл - применяется СпрингФреймворк
-    // spring-boot-starter-thymeleaf
+    public String getRegistrationNewAdminForm(Principal principal)
     {
-//        System.out.println("---------registration------language:" + language);
-//        model.addAttribute("title", new MyUser()); // в круглых скобках пара ключ, значение
-//        String redirectRegistration = "redirect:/sbb/v1/";
-//        redirectRegistration = redirectRegistration + "registration_" + controllerService.getLanguageZone(language);
-        String whereToGo = "registration_new_admin";
-        // если админ не уровня бог, то редирект на error
-        if (!principal.getName().equals(adminLevelGod)){
-            whereToGo = "redirect:/sbb/v1/error";
-        }
-        return whereToGo;
+        return adminService.whereToGoIfAdminGoesIntoAdminLevelGod(principal,"registration_new_admin");
     }
 
     @PostMapping("/registration_handler_newadmin")
     public String registrationNewAdminProcessing(MyUser user, Model model,Principal principal)
     {
-        String whereToGo = "registration_new_admin_succesful";
-        // если админ не уровня бог, то редирект на error
-        if (!principal.getName().equals(adminLevelGod)){
-            whereToGo = "redirect:/sbb/v1/error";
-        } else {
-            if (user.getLogin().length() < 6)
-            {
-//                System.out.println("----256-----registration------user.getLogin():" + user.getLogin());
-                model.addAttribute("error",
-                        "ОШИБКА! Длина логина должна быть более 5ти символов!\n");
-                whereToGo = "registration_new_admin";
-            } else
-            if (user.getLogin().length() > 5 && user.getPassword().length() < 9)
-            {
-//                System.out.println("----263-----registration------user.getLogin():" + user.getLogin());
-//                System.out.println("----264-----registration------user.getPassword():" + user.getPassword());
-                model.addAttribute("error",
-                        "ОШИБКА! Длина пароля должна быть более 8ми символов!\n");
-                whereToGo = "registration_new_admin";
-            } else {
-                //        System.out.println("---------registration------language:" + language);
-//        System.out.println("---------registration------user:" + user);
-                MyUser fromDB = userRepository.findByLogin(user.getLogin()); // из введённых лог+пароль берём логин и смотрим
-                // его в БД и если такой логин там уже есть (значит fromDB будет не НАЛ) - значит надо придумывать новый логин
-//        System.out.println("---273-----------fromDB:" + fromDB);
-                if (fromDB != null)
-                {
-                    model.addAttribute("error", "ОШИБКА! Сотрудник с таким именем (логином) уже существует!\n");
-                    whereToGo = "registration_new_admin";
-                }
-
-                user.setRole(roleRepository.findByRoleName("ROLE_ADMIN")); // если логин новый, то добавляем роль
-//        System.out.println("---------------user" + user);
-                user.setPassword(encoder.encode(user.getPassword())); // кодируем пароль
-                //System.out.println("!!!!!!!!!!!!кодируем пароль:" + user.getPassword() );
-                userRepository.save(user); // и потом сохраняем польз-ля с закодированным паролем
-                // перенаправляем на форму входа, после того как регистрация прошла удачно
-                System.out.println("---286-----------user:" + user);
-            }
-        }
-        return whereToGo;
+        ResultDto resultDto = adminService.getRegistrationNewAdminProcessing(user,principal);
+        model.addAttribute("error", resultDto.getResultsEnumList());
+        return resultDto.getSomeText(); // whereToGo;
     }
 }
