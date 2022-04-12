@@ -13,18 +13,28 @@
 <!--<a href="/sbb/v1/logout">Выйти!</a>-->
 <form action="/sbb/v1/logout">
     <button><img style="vertical-align: middle">
-        Ausgang! ** Выйти! ** Logout!
+        Выйти!
     </button>
     </p>
 </form>
 <div th:if="${error}" th:text="${error}"></div>
-<p style="text-align: center"><b>Просмотр всех пассажиров, зарегистрированных на поезд</b></p>
+<p style="text-align: center"><b>Просмотр всех пассажиров, зарегистрированных на поезд (у кого есть
+    билеты на выбранный поезд на любую выбранную дату, в т. ч. из прошлого)</b></p>
 <br>
+<!--список актуальных поездов-->
+<table border="1" width="100%" cellpadding="5">
+    <tr th:each ="trainsname : ${trainsnames}"> <!--строки таблицы-->
+        <td th:utext="${trainsname}"></td>
+    </tr>
+</table><br>
 <!--Переключатели позволяют пользователю выбрать только одно из ограниченного числа вариантов-->
 <p style="text-align: left">Выберите нужный номер поезда:</p>
 <form th:action="@{/sbb/v1/admin/account/find_all_passengers_in_one_train_handler}" method="post">
-    <input size="35" type="text" placeholder="Введите номер поезда..." name="trainNumber">
-    <input type="submit" value="Отправить">
+    <input size="35" type="text" placeholder="Введите номер поезда..." name="trainNumber"><br><br>
+    Выберите нужную Вам дату:
+    <br><input type="date" id="dataToday" name="departureDate">
+    <script>document.getElementById('dataToday').valueAsDate = new Date();</script>
+    <br><br><input type="submit" value="Отправить">
 </form>
 <br>
 </body>

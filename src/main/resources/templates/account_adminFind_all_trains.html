@@ -13,14 +13,14 @@
 <!--<a href="/sbb/v1/logout">Выйти!</a>-->
 <form action="/sbb/v1/logout">
     <button><img style="vertical-align: middle">
-        Ausgang! ** Выйти! ** Logout!
+        Выйти!
     </button>
     </p>
 </form>
 <div th:if="${error}" th:text="${error}"></div>
 <p style="text-align: center"><b>Просмотр всех поездов</b></p>
 <br>
-<table border="1" width="100%" cellpadding="5">
+<table border="1" width="90%" cellpadding="5">
     <tr>
         <!--заголовок таблицы-->
         <th>Id поезда</th>
@@ -31,8 +31,8 @@
     <tr th:each ="train : ${trains}"> <!--строки таблицы-->
         <td th:utext="${train.id}"></td><!--Айди поезда-->
         <td th:utext="${train.version}"></td><!--Версия изменений-->
-        <td th:utext="${train.numberTrain_nummerZug}"></td><!--Номер поезда-->
-        <td th:utext="${train.passengersCapacity_passagierkapazitat}"></td><!--Количество мест-->
+        <td th:utext="${train.numberTrainNummerZug}"></td><!--Номер поезда-->
+        <td th:utext="${train.passengersCapacityPassagierkapazitat}"></td><!--Количество мест-->
     </tr>
 </table>
 <br>

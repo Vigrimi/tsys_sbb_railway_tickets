@@ -12,14 +12,16 @@
 Личный кабинет пользователя - <b>сотрудник компании с ролью "ADMIN"</b>
 <form action="/sbb/v1/logout">
     <button><img style="vertical-align: middle">
-        Ausgang! ** Выйти! ** Logout!
-    </button>
-    </p>
-</form>
+        Выйти!
+    </button></form>
+
 <table border="0" width="35%" cellpadding="5">
     <tr> <!--строки таблицы-->
     <tr> <!--заголовок таблицы-->
         <th><p style="text-align: left">Просмотр всех пассажиров, зарегистрированных на поезд №</p></th>
+    <th>
+        <b><p style="text-align: center" th:if="${trainnumber}" th:text="${trainnumber}"></p></b>
+    </th>
     <th>
         <form action="/sbb/v1/admin/account/find_all_passengers_in_one_train">
             <p style="text-align: center">
@@ -37,19 +39,25 @@
 <br>
 <div th:if="${result}" th:text="${result}"></div>
 <br>
-<table border="1" width="100%" cellpadding="5">
+<table border="1" width="90%" cellpadding="5">
     <tr>
         <!--заголовок таблицы-->
         <th>№ п/п</th>
         <th>Номер билета</th>
         <th>Имя пассажира</th>
         <th>Фамилия пассажира</th>
+        <th>Номер поезда</th>
+        <th>Дата отправления</th>
+        <th>Номер места</th>
     </tr>
     <tr th:each ="passenger : ${passengers}"> <!--строки таблицы-->
         <td th:utext="${passenger.numberInOrder}"></td><!--№ п/п-->
         <td th:utext="${passenger.ticketId}"></td><!--Номер билета-->
         <td th:utext="${passenger.passengerName}"></td><!--Имя пассажира-->
         <td th:utext="${passenger.passengerSurname}"></td><!--Фамилия пассажира-->
+        <td th:utext="${passenger.trainNumber}"></td><!--Номер поезда-->
+        <td th:utext="${passenger.departureDate}"></td><!--Дата отправления-->
+        <td th:utext="${passenger.ticketSeatNumber}"></td><!--Номер места-->
     </tr>
 </table>
 </body>
