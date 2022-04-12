@@ -3,19 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <title>Форма входа</title>
+    <!-- CSS only -->
+    <link href="/css/loginform.css" rel="stylesheet">
     <p style="text-align: center"><a href="http://localhost:8090/sbb/v1/">
         <img src="https://static.meteoblue.com/assets/images/cityclimate/partner/sbb.png"
              width="320" height="30" border="0" alt="Пример"></a></p>
 </head>
 <body>
-<div th:if="${failure}" th:text="${failure}"></div>
+<style>
+<!--div {width: 100%;}-->
+a {display: block; text-align: center;}
+</style>
+<div style="text-align: center" th:if="${failure}" th:text="${failure}"></div>
+<div style="text-align: center" th:if="${error}" th:text="${error}"></div>
 <br>
-<form th:action="@{/sbb/v1/login-handler}" method="post"> <!-- .loginProcessingUrl("/login-handler")  -->
-    <input type="text" placeholder="Введите логин..." name="login"> <!-- .usernameParameter("login")  -->
-    <input type="password" placeholder="Введите пароль..." name="password"> <!-- .passwordParameter("password")  -->
-    <input type="submit" value="Войти">
+<form th:action="@{/sbb/v1/login-handler}" method="post" style="text-align: center"> <!-- .loginProcessingUrl("/login-handler")  -->
+    <br><br><input type="text" placeholder="Введите логин..." name="login"><br><br><br> <!-- .usernameParameter("login")  -->
+    <input type="password" placeholder="Введите пароль..." name="password"><br><br><br> <!-- .passwordParameter("password")  -->
+    <input type="submit" value="Войти"><br>
 </form>
-Пройти регистрацию как новый пользователь
-<a href="/sbb/v1/registration_ru">Зарегистрироваться!</a>
+<p style="text-align: center">Пройти регистрацию как новый пользователь</p>
+<a style="text-align: center" href="/sbb/v1/registration_ru">Зарегистрироваться!</a>
 </body>
 </html>

@@ -35,7 +35,7 @@ public class MyUser extends SuperclassForEntity {
 
     @Override
     public String toString() {
-        return "MyUser{" +  "user_id='" + getId() + '\'' + ", version='" + getVersion() + '\'' +
+        return "\nMyUser{" +  "user_id='" + getId() + '\'' + ", version='" + getVersion() + '\'' +
                 ", login='" + login + '\'' +
                 ", password='<masked" /*+ password*/ + ">'" +
                 ", role=" + role +

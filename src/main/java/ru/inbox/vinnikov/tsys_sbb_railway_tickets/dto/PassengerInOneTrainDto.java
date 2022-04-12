@@ -20,6 +20,15 @@ public class PassengerInOneTrainDto {
     // фамилия пассажира
     private String passengerSurname;
 
+    // номер поезда
+    private String trainNumber;
+
+    // дата отправления
+    private String departureDate;
+
+    // номер места
+    private int ticketSeatNumber;
+
     // айди пассажира
     private long passengerId;
 

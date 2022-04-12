@@ -18,26 +18,44 @@ public class PassengerFahrgast extends SuperclassForEntity {
 
     // имя пассажира
     @Column(name = "name_passenger_fahrgast", nullable = false)
-    private String name_passenger_fahrgast;
+    private String namePassengerFahrgast;
 
     // фамилия пассажира
     @Column(name = "surname_passenger_familienname_fahrgast", nullable = false)
-    private String surnamePassenger_familiennameFahrgast;
+    private String surnamePassengerFamiliennameFahrgast;
 
     // день рождения пассажира
     @Column(name = "birthday_passenger_geburtstag_fahrgast", nullable = false)
     @Pattern(regexp = "\\d{4}-\\d{2}-\\d{2}") // yyyy-mm-dd
-    private String birthdayPassenger_geburtstagFahrgast;
+    private String birthdayPassengerGeburtstagFahrgast;
 
-    // айди логина, пока НЕ РЕАЛИЗОВАНО
+    // номер паспорта
+    @Column(name = "passport_number_passenger", nullable = false)
+    private String passportNumber;
 
+    // мэйл
+    @Column(name = "email_passenger", nullable = false)
+    private String emailPassenger;
+
+    // номер мобильного
+    @Column(name = "mobile_phone_number_passenger", nullable = false)
+    private String mobilePhoneNumberPassenger;
+
+    // айди логина
+    @Column(name = "user_id_in_passenger", nullable = false)
+    private long userId;
+// + "id='" + getId() + '\'' + ", version='" + getVersion() + '\'' +
 
     @Override
     public String toString() {
-        return "Passenger_Fahrgast{" + "id='" + getId() + '\'' + ", version='" + getVersion() + '\'' +
-                "name_passenger_fahrgast='" + name_passenger_fahrgast + '\'' +
-                ", surnamePassenger_familiennameFahrgast='" + surnamePassenger_familiennameFahrgast + '\'' +
-                ", birthdayPassenger_geburtstagFahrgast='" + birthdayPassenger_geburtstagFahrgast + '\'' +
+        return "PassengerFahrgast{" + "id='" + getId() + '\'' + ", version='" + getVersion() + '\'' +
+                ", namePassengerFahrgast='" + namePassengerFahrgast + '\'' +
+                ", surnamePassengerFamiliennameFahrgast='" + surnamePassengerFamiliennameFahrgast + '\'' +
+                ", birthdayPassengerGeburtstagFahrgast='" + birthdayPassengerGeburtstagFahrgast + '\'' +
+                ", passportNumber=" + passportNumber +
+                ", emailPassenger='" + emailPassenger + '\'' +
+                ", mobilePhoneNumberPassenger='" + mobilePhoneNumberPassenger + '\'' +
+                ", userId=" + userId +
                 '}';
     }
 }

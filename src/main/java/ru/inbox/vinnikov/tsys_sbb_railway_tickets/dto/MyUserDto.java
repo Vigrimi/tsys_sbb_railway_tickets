@@ -10,6 +10,6 @@ import lombok.ToString;
 public class MyUserDto {
     private long id;
     private int version;
-    private String numberTrain_nummerZug;
-    private int passengersCapacity_passagierkapazitat;
+    private String numberTrainNummerZug;
+    private int passengersCapacityPassagierkapazitat;
 }

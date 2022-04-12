@@ -1,0 +1,21 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+/*h1 {
+    font-size: 50px;
+    color: red;
+}*/
+
+body {
+    /*display: flex;*/
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    /*min-width: 100vh;*/
+    background:url(https://www.railjournal.com/wp-content/uploads/2021/10/Visualisierung-Stadler-1024x768.jpg);
+    /*background:url(https://i0.wp.com/open.prodir.com/wp-content/uploads/2019/10/swiss-railway-clock-scaled.jpg?resize=1400%2C933&ssl=1);*/
+    /*background: linear-gradient(to bottom, #99ffff, #e8ccff);*/
+    background-size: cover;
+}
