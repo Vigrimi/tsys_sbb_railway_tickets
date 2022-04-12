@@ -16,26 +16,18 @@ public class TrainZug extends SuperclassForEntity {
 
     // Номер поезда
     @Column(name = "number_train_nummer_zug", nullable = false, unique = true)
-    private String numberTrain_nummerZug;
+    private String numberTrainNummerZug;
 
     // Количество пассажирских мест
     @Column(name = "passengers_capacity_passagierkapazitat", nullable = false)
     @Min(0)
-    private int passengersCapacity_passagierkapazitat;
-
-    // Станции следования у поезда
-//    @ManyToMany(cascade = CascadeType.ALL)
-//    @JoinTable(name = "stations_sequence_stationen_sequenz",
-//    joinColumns = @JoinColumn(name = "train_zug_id", referencedColumnName = "id"), // это айди поезда Train_Zug
-//    inverseJoinColumns = @JoinColumn(name = "rwstation_bahnhof_id", referencedColumnName = "id")) // это айди станции RailwayStation_Bahnhof
-//    @ToString.Exclude
-//    private ArrayList<RailwayStation_Bahnhof> stationsSequence_stationenSequenz;
+    private int passengersCapacityPassagierkapazitat;
 
     @Override
     public String toString() {
-        return "Train_Zug{" + "id='" + getId() + '\'' + ", version='" + getVersion() + '\'' +
-                ", numberTrain_nummerZug='" + numberTrain_nummerZug + '\'' +
-                ", passengersCapacity_passagierkapazitat=" + passengersCapacity_passagierkapazitat +
+        return "\nTrain_Zug{" + "id='" + getId() + '\'' + ", version='" + getVersion() + '\'' +
+                ", numberTrain_nummerZug='" + numberTrainNummerZug + '\'' +
+                ", passengersCapacity_passagierkapazitat=" + passengersCapacityPassagierkapazitat +
                 '}';
     }
 }

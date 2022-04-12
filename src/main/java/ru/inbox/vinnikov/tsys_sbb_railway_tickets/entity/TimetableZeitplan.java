@@ -2,7 +2,6 @@ package ru.inbox.vinnikov.tsys_sbb_railway_tickets.entity;
 
 import lombok.Getter;
 import lombok.Setter;
-
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
 
@@ -45,22 +44,22 @@ public class TimetableZeitplan extends SuperclassForEntity {
     // время прибытия поезда на текущую станцию: чч:мм в формате 24ч
     @Column(name = "train_arrival_time_zuges_ankunftszeit", nullable = false)
     @Pattern(regexp = "\\d{2}:\\d{2}") // hh:mm
-    private String trainArrivalTime_ZugesAnkunftszeit;
+    private String trainArrivalTimeZugesAnkunftszeit;
 
     // время отправления поезда с текущей станции: чч:мм в формате 24ч
     @Column(name = "train_departure_time_zuges_abfahrtszeit", nullable = false)
     @Pattern(regexp = "\\d{2}:\\d{2}") // hh:mm
-    private String trainDepartureTime_ZugesAbfahrtszeit;
+    private String trainDepartureTimeZugesAbfahrtszeit;
 
     @Override
     public String toString() {
-        return "TimetableZeitplan{" + "id='" + getId() + '\'' + ", version='" + getVersion() + '\'' +
+        return "\nTimetableZeitplan{" + "id='" + getId() + '\'' + ", version='" + getVersion() + '\'' +
                 ", trainIdZugId=" + trainIdZugId +
                 ", previousRwstationIdBahnhofId=" + previousRwstationIdBahnhofId +
                 ", currentRwstationIdBahnhofId=" + currentRwstationIdBahnhofId +
                 ", nextRwstationIdBahnhofId=" + nextRwstationIdBahnhofId +
-                ", trainArrivalTime_ZugesAnkunftszeit=" + trainArrivalTime_ZugesAnkunftszeit +
-                ", trainDepartureTime_ZugesAbfahrtszeit='" + trainDepartureTime_ZugesAbfahrtszeit + '\'' +
+                ", trainArrivalTime_ZugesAnkunftszeit=" + trainArrivalTimeZugesAnkunftszeit +
+                ", trainDepartureTime_ZugesAbfahrtszeit='" + trainDepartureTimeZugesAbfahrtszeit + '\'' +
                 '}';
     }
 }

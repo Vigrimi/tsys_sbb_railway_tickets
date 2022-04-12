@@ -2,6 +2,8 @@ package ru.inbox.vinnikov.tsys_sbb_railway_tickets;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import ru.inbox.vinnikov.tsys_sbb_railway_tickets.service.WhatsAppService;
+
 import java.time.LocalDateTime;
 
 /**
@@ -19,6 +21,12 @@ public class TsysSbbRailwayTicketsApplication {
 		LOGGER.info("\n ===============================> sbb tickets started -> " + LocalDateTime.now());
 		SpringApplication.run(TsysSbbRailwayTicketsApplication.class, args);
 		LOGGER.info("\n ===============================> sbb tickets finished -> " + LocalDateTime.now());
+
+		// TODO включить ватсап при демонстрации + тикет сервис
+//		LOGGER.info("\n ==whatsAppService=============================> sbb tickets started -> " + LocalDateTime.now());
+//		WhatsAppService whatsAppService = new WhatsAppService();
+//		whatsAppService.runWhatsapWeb();
+//		LOGGER.info("\n ==whatsAppService=============================> sbb tickets finished -> " + LocalDateTime.now());
 	}
 
 }

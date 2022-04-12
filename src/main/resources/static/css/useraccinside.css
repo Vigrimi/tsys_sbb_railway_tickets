@@ -1,0 +1,42 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+/*table {
+    margin: auto;
+    display: inline;
+}*/
+/*h1 {
+    font-size: 50px;
+    color: red;
+    background:url(https://tenor.com/view/sbb-clock-minutensprung-minutensprunguhr-swiss-gif-14559470);
+}*/
+
+body {
+    /*display: flex;*/
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(to bottom, #99ffff, #e8ccff);
+}
+
+ul.spisok_ver3{
+border:0;
+background:#fff;
+border:solid 0px #eee;
+list-style:none;
+/* Убирает маркировку списка */
+
+}
+
+.module_content ul.spisok_ver3{
+border:0;
+}
+
+ul.spisok_ver3 li{
+border-bottom:solid 1px #ddd;
+display: block;
+float: left;
+border: 1px solid #555;
+padding: 5px;
+}
