@@ -1,5 +1,7 @@
 package ru.inbox.vinnikov.tsys_sbb_railway_tickets.service;
 
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.NoSuchWindowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.inbox.vinnikov.tsys_sbb_railway_tickets.dto.PassengerInOneTrainDto;
@@ -62,7 +64,6 @@ public class TicketService implements CodeHandler, DateAndTimeHandler,FileHandle
     //-------------------------------------------------------------
     public ResultDto getNewTicket(String passIdString, String trainNumber, String rwstationDepartureInputed
             , String rwstationArrivalInputed, String departureDate, ArrayList<PassengerFahrgast> allPassengers){
-        // TODO сделать проверки введённых данных, если Стринги пришли нал
         // результат есть ли места и всё ли ок
         // цена билета
         long passengerId = Long.parseLong(passIdString);
@@ -95,24 +96,27 @@ public class TicketService implements CodeHandler, DateAndTimeHandler,FileHandle
             stationArrFmDB = rwStationService.getRwStationFmDBByName(rwstationArrivalInputed);
             newTicket.setTicketRwStationArrival(stationArrFmDB);
         }
-
-        assert stationDepFmDB != null;
-        String rwstationDeparture = stationDepFmDB.getNameRailwayStationBahnhof();
-//        System.out.println("--------94-----------getNewTicket  rwstationDeparture:" + rwstationDeparture);
-        assert stationArrFmDB != null;
-        String rwstationArrival = stationArrFmDB.getNameRailwayStationBahnhof();
+        String rwstationDeparture = null;
+        if (stationDepFmDB != null)
+            rwstationDeparture = stationDepFmDB.getNameRailwayStationBahnhof();
+        String rwstationArrival = null;
+        if(stationArrFmDB != null)
+            rwstationArrival = stationArrFmDB.getNameRailwayStationBahnhof();
 
         // взять последовательность станций у этого поезда
         RwStationsTrainSequence rwStationsTrainSequence = trainSequenceRepository
                 .findBySequenceTrainNumber(trainFmDB.getNumberTrainNummerZug());
         String trainSequence = rwStationsTrainSequence.getSequenceRwStations();
         // получить время отправления и прибытия по соответствующим станциям
-        String[] timeDepAndArr = sequenceService.getDepTimeByDepStationAndArrTimeByArrStationFmSequence
-                (rwstationDeparture,rwstationArrival,trainSequence);
-//        System.out.println("--------103-----------getNewTicket  String[] timeDepAndArr:" + Arrays.toString(timeDepAndArr));
-        String timeDeparture = timeDepAndArr[IntConstants.DEPARTURE_TIME_INDEX_IN_ARRAY.getDigits()];
-//        System.out.println("--------104-----------getNewTicket  timeDeparture:" + timeDeparture);
-        String timeArrival = timeDepAndArr[IntConstants.ARRIVAL_TIME_INDEX_IN_ARRAY.getDigits()];
+        String timeDeparture = "";
+        String timeArrival = "";
+        if (rwstationDeparture != null && rwstationArrival != null){
+            String[] timeDepAndArr = sequenceService.getDepTimeByDepStationAndArrTimeByArrStationFmSequence
+                    (rwstationDeparture,rwstationArrival,trainSequence);
+            timeDeparture = timeDepAndArr[IntConstants.DEPARTURE_TIME_INDEX_IN_ARRAY.getDigits()];
+            timeArrival = timeDepAndArr[IntConstants.ARRIVAL_TIME_INDEX_IN_ARRAY.getDigits()];
+        }
+
         // если станции из базы нал
         if (stationDepFmDB == null){
             resultsEnumListFmTo.add(Results.ERROR_RWSTATION_NAME_FROM_MISSED_IN_DB.getResultText());
@@ -144,7 +148,7 @@ public class TicketService implements CodeHandler, DateAndTimeHandler,FileHandle
             newTicket.setTicketDepartureTime(Results.ERROR_NEW_TICKET_WRONG_PASSENGER.getResultText());
             resultDto.setTicketFahrkarte(newTicket);
         } else
-        // проверить: есл дата отправления сегодня: время: не ушёл ли уже поезд, и если до отправки менее десяти минут
+        // проверить: если дата отправления сегодня: время: не ушёл ли уже поезд, и если до отправки менее десяти минут
         if (checkIfDateIsToday(departureDate) &&
                 !timetableService.timeAvailableToBuyTicket(trainSequence,rwstationDeparture)){
                 resultsEnumListFmTo.add(Results.ERROR_TIME_LATE_BUY_TICKET.getResultText());
@@ -152,7 +156,6 @@ public class TicketService implements CodeHandler, DateAndTimeHandler,FileHandle
                 resultDto.setTicketFahrkarte(newTicket);
         } else { // всё хорошо, готовим билет
             // проверить есть ли у этого пассажира уже билет на этот рейс
-            // TODO настроить также проверку по станциям: могут быть два билета у пассажира на разные станции следования
             ResultDto resultDtoAllPassengers = passengerService.serviceFindAllPassengersInOneTrainHandler
                     (trainFmDB.getNumberTrainNummerZug(),departureDate);
             ArrayList<PassengerInOneTrainDto> passengerInOneTrainDtoArrayList =
@@ -177,7 +180,6 @@ public class TicketService implements CodeHandler, DateAndTimeHandler,FileHandle
                 newTicket.setTicketPassengerIdFahrkarteFahrgastId(passengerFmDB);
                 newTicket.setTicketDepartureTime(timeDeparture);
                 newTicket.setTicketArrivalTime(timeArrival);
-//            System.out.println("--------151-----------getNewTicket  newTicket:" + newTicket);
                 // надо идти в базу мест и взять все места на рейсе этого поезда
                 String voyageNumber = departureDate + "-" + trainFmDB.getNumberTrainNummerZug();
                 ArrayList<SeatInTrain> seatsInTrainByVoyage = seatInTrainRepository.findAllByVoyageNumber(voyageNumber);
@@ -193,7 +195,6 @@ public class TicketService implements CodeHandler, DateAndTimeHandler,FileHandle
                 }
                 resultDto.setSomeList(availableSeatsToBuy);
 
-//            System.out.println("--------167-----------getNewTicket  newTicket:" + newTicket);
                 // PROCESS_NEW_TICKET_SELECT_SEAT("Процесс покупки билета продолжается. Надо выбрать место в поезде.")
                 resultsEnumListFmTo.add(Results.PROCESS_NEW_TICKET_SELECT_SEAT.getResultText());
                 String someText = "Продолжение формирования билета. Станция отправления: " + newTicket
@@ -215,7 +216,7 @@ public class TicketService implements CodeHandler, DateAndTimeHandler,FileHandle
         resultDto.setResultsEnumList(resultsEnumListFmTo);
         // уже есть новый билет, но нет места и цены
         TicketFahrkarte newTicket = newTicketBookedNotPayedNoSeat;
-        // новый билет, установить цену
+        // новый билет, установить цену - пока рандомно
         Random random = new Random();
         double price = (random.nextInt(10000) + 10) + 1;
         price /= 100;
@@ -224,32 +225,36 @@ public class TicketService implements CodeHandler, DateAndTimeHandler,FileHandle
         int seatNumber = Integer.parseInt(seatNumberString);
         newTicket.setTicketSeatNumber(seatNumber);
 
-        // типа код для оплаты билета
+        // код для оплаты билета
         int code = getFourDigitsCode();
-        System.out.println("-------getNewTicket--------------code:" + code);
+        LOGGER.info("-------getNewTicket--------------code:" + code);
         resultDto.setResultsInt(code);
         String textMail = Results.MAIL_TEXT_CODE_TO_BUY_TICKET.getResultText()  + code;
         try {
-            LOGGER.info("--------try mailService.sendSimpleMail  началось -> " + LocalDateTime.now());
+            LOGGER.info("\n-------TicketService----getNewTicketWithSeatNumber----try mailService.sendSimpleMail  началось -> " + LocalDateTime.now());
             mailService.sendSimpleMail(Results.MAIL_SUBJECT_SEND_CODE.getResultText(), textMail); // sendEMail(code + "");
-            LOGGER.info("--------try mailService.sendSimpleMail  закончилось -> " + LocalDateTime.now());
-//            LOGGER.info("--------try whatsAppService  началось -> " + LocalDateTime.now());
-//            WhatsAppService.sendInWatsapWeb(Results.MAIL_SUBJECT_SEND_CODE.getResultText() + ". " + textMail);
-//            LOGGER.info("--------try whatsAppService  закончилось -> " + LocalDateTime.now());
+            LOGGER.info("\n-------TicketService----getNewTicketWithSeatNumber----try mailService.sendSimpleMail  закончилось -> " + LocalDateTime.now());
         } catch (MessagingException | UnsupportedEncodingException e) {
             LOGGER.error(e + "**" + LocalDateTime.now());
             e.printStackTrace();
         }
 
+        /*try{
+            LOGGER.info("\n-------TicketService-----getNewTicketWithSeatNumber-------try whatsAppService  началось -> " + LocalDateTime.now());
+            WhatsAppService.sendInWatsapWeb(Results.MAIL_SUBJECT_SEND_CODE.getResultText() + ". " + textMail);
+            LOGGER.info("\n-------TicketService----getNewTicketWithSeatNumber----try whatsAppService  закончилось -> " + LocalDateTime.now());
+        } catch (NoSuchWindowException | NoSuchElementException nw)
+        {
+            LOGGER.error("------ticket service-248-runWhatsapWeb--хром ватсапвэб обвалился-> " + LocalDateTime.now() + nw);
+        }*/
+
         resultDto.setTicketPrice(newTicket.getTicketPrice());
         resultsEnumListFmTo.add(Results.SUCCESS_NEW_TICKET_BOOKED.getResultText());
         resultDto.setTicketFahrkarte(newTicket);
-//        System.out.println("------------getNewTicket--------newTicket:" + newTicket);
         return resultDto;
     }
 
     public ResultDto checkCodeAndBuyNewTicket(int codeInputed, int codeFmSystem,TicketFahrkarte newTicketBookedNotPayed){
-        // TODO сделать проверки введённых данных
         ResultDto resultDto = new ResultDto();
         ArrayList<String> resultsEnumListBuy = new ArrayList<>();
         resultDto.setResultsEnumList(resultsEnumListBuy);
@@ -269,13 +274,12 @@ public class TicketService implements CodeHandler, DateAndTimeHandler,FileHandle
                 se.printStackTrace();
             }
             ArrayList<TicketFahrkarte> ticketBoughtFmDBAlist = ticketRepository.findAllByPassengerId(passengerId);
-            // TODO при сохранении билета сразу взять его айди в базе
+            // при сохранении билета сразу взять его айди в базе
             ticketBoughtFmDB = ticketBoughtFmDBAlist.get(ticketBoughtFmDBAlist.size()-1);
             if (ticketBoughtFmDB.getId() != 0){
                 resultsEnumListBuy.add(Results.SUCCESS_NEW_TICKET_BOUGHT.getResultText());
                 // у места в конкретном рейсе убрать станции, чтобы было нельзя купить ещё билет на это же место на
                 // такую же последовательность станций
-                // TODO проверка результата удаления станций
                 seatInTrainService.removeStationsFmSeatSequence(ticketBoughtFmDB);
             }
         }
@@ -289,24 +293,31 @@ public class TicketService implements CodeHandler, DateAndTimeHandler,FileHandle
             writeInOutputFile(ticketToPrintDto.toString(),fileNameAndPath);
             // отправить билет на мэйл и в ватсап
             try {
-                LOGGER.info("--------try mailService.sendSimpleMail  началось -> " + LocalDateTime.now());
+                LOGGER.info("\n-------TicketService----checkCodeAndBuyNewTicket----try mailService.sendSimpleMail  началось -> " + LocalDateTime.now());
                 // отправка мэйла с аттаченным файлом
                 mailService.sendFileMail(Results.MAIL_SUBJECT_NEW_TICKET.getResultText()
                         , ticketToPrintDto.toString(), fileNameAndPath);
-                LOGGER.info("--------try mailService.sendSimpleMail  закончилось -> " + LocalDateTime.now());
-//                LOGGER.info("--------try whatsAppService  началось -> " + LocalDateTime.now());
-//                WhatsAppService.sendInWatsapWeb(Results.MAIL_SUBJECT_NEW_TICKET.getResultText() + ". \r"
-//                        + ticketToPrintDto.toString().replaceAll("\n","\r"));
-//                LOGGER.info("--------try whatsAppService  закончилось -> " + LocalDateTime.now());
+                LOGGER.info("\n-------TicketService----checkCodeAndBuyNewTicket----try mailService.sendSimpleMail  закончилось -> " + LocalDateTime.now());
             } catch (MessagingException | UnsupportedEncodingException e) {
                 LOGGER.error(e + "**" + LocalDateTime.now());
                 e.printStackTrace();
             }
+
+            /*try{
+                LOGGER.info("\n-------TicketService----checkCodeAndBuyNewTicket----try whatsAppService  началось -> " + LocalDateTime.now());
+                WhatsAppService.sendInWatsapWeb(Results.MAIL_SUBJECT_NEW_TICKET.getResultText() + ". \r"
+                        + ticketToPrintDto.toString().replaceAll("\n","\r"));
+                LOGGER.info("\n-------TicketService----checkCodeAndBuyNewTicket----try whatsAppService  закончилось -> " + LocalDateTime.now());
+            } catch (NoSuchWindowException | NoSuchElementException nw)
+            {
+                LOGGER.error("------ticket service-315-runWhatsapWeb--хром ватсапвэб обвалился-> " + LocalDateTime.now() + nw);
+            }*/
         }
         return resultDto;
     }
 
     public TicketToPrintDto getTicketToPrintDtoFromTicketBoughtFmDB(TicketFahrkarte ticketBoughtFmDB){
+        // получить билетДто из сущности билета
         TicketToPrintDto ticketToPrintDto = new TicketToPrintDto();
         ticketToPrintDto.setNamePassenger(ticketBoughtFmDB.getTicketPassengerIdFahrkarteFahrgastId().getNamePassengerFahrgast());
         ticketToPrintDto.setSurnamePassenger(ticketBoughtFmDB.getTicketPassengerIdFahrkarteFahrgastId().getSurnamePassengerFamiliennameFahrgast());

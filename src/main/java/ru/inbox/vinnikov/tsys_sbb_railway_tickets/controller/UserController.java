@@ -64,7 +64,6 @@ public class UserController {
         // отобразить всех пассажиров у юзера и взять его айди для возможных следующих операций
         allPassengers = passengerService.getAllPassengersFromUser(principal);
         currentUserId = allPassengers.get(IntConstants.FIRST_ELEMENT_IN_ARRAY.getDigits()).getUserId();
-        System.out.println("-------GetMapping /buy_rw_ticket ---currentUserId:" + currentUserId);
         model.addAttribute("passengers", allPassengers);
         model.addAttribute("trains",trainRepository.findAll());
         return "buy_rw_ticket";
@@ -73,7 +72,6 @@ public class UserController {
     @PostMapping("/buy_rw_ticket_handler")
     public String userBuyRwTicketHandler(String passIdString,String trainNumber,String rwstationDeparture
             ,String rwstationArrival,String departureDate,Model model){
-        System.out.println("========= passIdString:" + passIdString);
         ResultDto resultDtoNewTicket = ticketService.getNewTicket(passIdString,trainNumber,rwstationDeparture
                 ,rwstationArrival,departureDate,allPassengers);
         // результат есть ли места на рейсе и выбор места
@@ -86,7 +84,6 @@ public class UserController {
     // по найденному поезду, дате и пр - вывести актуальные места в поезде для выбора покупателю
     @PostMapping("/buy_rw_ticket_take_seat_in_train")
     public String userBuyRwTicketTakeSeatInTrain(String seat,Model model){
-        System.out.println("-----------------выбрал место seat:" + seat);
         ResultDto resultDtoNewTicket = ticketService.getNewTicketWithSeatNumber(newTicketBookedNotPayedNoSeat,seat);
         // цена билета
         model.addAttribute("result",resultDtoNewTicket.getResultsEnumList());
@@ -110,7 +107,7 @@ public class UserController {
     @PostMapping("/buy_rw_ticket/add_new_passenger_handler")
     public String userAddNewPassengerHandler(String namePassenger,String surnamePassenger,String birthdayPassenger
             ,String passportNumber,String emailPassenger,String mobilePhoneNumber,Model model){
-        // TODO удалить неактуального пассажира, кому отправлять билет пассажиру или юзеру или обоим
+        // удалить неактуального пассажира, кому отправлять билет пассажиру или юзеру или обоим
         // проверка: такой пассажир уже сохранён у этого юзера (фио, ДР, паспорт)
         // обработка добавления нового пассажира
         ResultDto resultDtoAddNewPassenger = passengerService.addNewPassengerInDB(namePassenger,surnamePassenger
@@ -131,7 +128,6 @@ public class UserController {
     @PostMapping("/find_fm_to_rwstation_handler")
     public String userFindFmToRwstationHandler(String rwstationNameFrom,String rwstationNameTo,String timeFrom
             ,String timeTo,Model model){
-//        System.out.println("------------inputed data:" + rwstationNameFrom + rwstationNameTo + timeFrom + timeTo);
         String text = "Для клиентов компании: поиск поезда, проходящего от станции " + rwstationNameFrom.toUpperCase()
                 + " до станции " + rwstationNameTo.toUpperCase() + " в заданный промежуток времени (" + timeFrom +
                 "-" + timeTo + ")." ;
@@ -152,12 +148,9 @@ public class UserController {
     }
     @PostMapping("/schedule_on_rwstation_handler")
     public String userScheduleOnRwstationHandler(String rwstationName,Model model){
-//        model.addAttribute("result", result);
         String textForScoreboard = "Информация по станции: " + rwstationName.toUpperCase();
-//        System.out.println("**************-----tablo------BAD ZURZACH textForScoreboard:" + textForScoreboard);
         model.addAttribute("rwstationName", textForScoreboard);
         ArrayList<ScheduleOnRwstationDto> scheduleDto = rwStationService.getScheduleOnRwstationHandler(rwstationName);
-//        System.out.println("----------PostMapping schedule_on_rwstation_handler--------");
         model.addAttribute("schedules", scheduleDto);
         return "schedule_on_rwstation_handler";
     }

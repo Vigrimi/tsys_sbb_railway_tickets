@@ -87,7 +87,7 @@ public class AdminController {
     @PostMapping("/account/add_new_rwstation_handler")
     public String addNewRwStationHandler(String rwstationName, Model model)
     {
-        // TODO исправить на ResultDTO
+        // исправить на ResultDTO
         int result = rwStationService.serviceAddNewRwstationNameHandler(rwstationName);
         if (result == 3) allStationsNames = rwStationService.getAllStationsNamesStr();
         model.addAttribute("result", resultArrAddNewRwSt[result]);
@@ -106,7 +106,6 @@ public class AdminController {
     @PostMapping("/account/add_new_train_handler") // ввести количество станций в маршруте поезда
     public String addNewTrainHandler(int routeQtyStations)
     {
-        System.out.println("----add_new_train_handler-------routeQtyStations:" + routeQtyStations);
         inputedRouteQtyStations = routeQtyStations;
         return "redirect:/sbb/v1/admin/account/add_new_train_handler_schedule";
     }
@@ -116,8 +115,6 @@ public class AdminController {
         model.addAttribute("allstations", allStationsNames);
         model.addAttribute("trainsnames", allTrainsNumbers);
         model.addAttribute("qtystations", inputedRouteQtyStations);
-//        System.out.println("--------5---allStationsNames:" + allStationsNames);
-//        System.out.println("--------6---model:" + model.toString());
         return "account_adminAdd_new_train_handler_" + inputedRouteQtyStations;
     }
     @PostMapping("/account/add_new_train_handler_schedule_handler") // проверка поезда и маршрута, внесение в БД
@@ -143,7 +140,7 @@ public class AdminController {
                 middle6station_timedep,middle7station,middle7station_timearr,middle7station_timedep,
                 middle8station,middle8station_timearr,middle8station_timedep,
                 endstation,endstation_time};
-        System.out.println("--------------------String[] inputedData:" + Arrays.toString(inputedData));
+        LOGGER.info("--------------------String[] inputedData:" + Arrays.toString(inputedData));
 
         int result = trainService.serviceAddNewTrainHandler
                 (trainNumber, passengersCapacity, inputedData,inputedRouteQtyStations);
@@ -156,9 +153,7 @@ public class AdminController {
     @GetMapping("/account/find_all_trains")
     public String findAllTrains(Model model)
     {
-//        LOGGER.info("------------------------trainRepository.findAll() started -> " + LocalDateTime.now());
         model.addAttribute("trains",trainRepository.findAll());
-//        LOGGER.info("------------------------trainRepository.findAll() finished -> " + LocalDateTime.now());
         return "account_adminFind_all_trains";
     }
 

@@ -19,6 +19,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
+import static ru.inbox.vinnikov.tsys_sbb_railway_tickets.TsysSbbRailwayTicketsApplication.LOGGER;
+
 @Service
 public class RwStationsTrainSequenceService {
     private final RwStationRepository rwStationRepository;
@@ -33,8 +35,8 @@ public class RwStationsTrainSequenceService {
     //-------------------------------------------------------------------------
     public ResultDto findFmToRwstationHandler(String rwstationNameFrom, String rwstationNameTo, String timeFrom,
                                               String timeTo, ArrayList<RwStationsTrainSequence> fullTrainsSequencesAList){
-        System.out.println("-----------------ResultDto findFmToRwstationHandler started");
-        System.out.println("-------------fullTrainsSequencesAList:" + fullTrainsSequencesAList);
+        LOGGER.info("-----------------ResultDto findFmToRwstationHandler started");
+//        System.out.println("-------------fullTrainsSequencesAList:" + fullTrainsSequencesAList);
         RailwayStationBahnhof rwstationNameFromFmDB = new RailwayStationBahnhof();
         RailwayStationBahnhof rwstationNameToFmDB = new RailwayStationBahnhof();
         // проверка введённых данных
@@ -59,10 +61,6 @@ public class RwStationsTrainSequenceService {
         int timeFromIntInputed = resultDtoTimeFrom.getResultsInt();
         ResultDto resultDtoTimeTo = getTimeFmStringToInt(timeTo);
         int timeToIntInputed = resultDtoTimeTo.getResultsInt();
-//        System.out.println("-----57------timeFromIntInputed:" + timeFromIntInputed);
-//        System.out.println("-----58------timeToIntInputed:" + timeToIntInputed);
-//        System.out.println("-----59------rwstationNameFromFmDB:" + rwstationNameFromFmDB);
-//        System.out.println("-----60------rwstationNameToFmDB:" + rwstationNameToFmDB);
 
         ResultDto resultDtoFmTo = new ResultDto();
         // собирать список ошибок
@@ -79,12 +77,10 @@ public class RwStationsTrainSequenceService {
             // "error", "ОШИБКА! Введённое название станции назначения отсутствует в базе!"
             resultsEnumListFmTo.add(Results.ERROR_RWSTATION_NAME_TO_MISSED_IN_DB.getResultText());
         } else if (resultDtoTimeFrom.getResultsInt() == IntConstants.ERROR_INT.getDigits()){
-//            System.out.println("--------------------76--------------------------");
             // если в проверке времени были ошибки, то добавить их в общий список ошибок
             ArrayList<String> buffer = resultDtoTimeFrom.getResultsEnumList();
             resultsEnumListFmTo.addAll(buffer);
         } else if (resultDtoTimeTo.getResultsInt() == IntConstants.ERROR_INT.getDigits()){
-//            System.out.println("--------------------81--------------------------");
             // если в проверке времени были ошибки, то добавить их в общий список ошибок
             ArrayList<String> buffer = resultDtoTimeTo.getResultsEnumList();
             resultsEnumListFmTo.addAll(buffer);
@@ -93,7 +89,6 @@ public class RwStationsTrainSequenceService {
             resultsEnumListFmTo.add(Results.ERROR_SEQUENCE_DB_IS_EMPTY.getResultText());
         } else if (resultsEnumListFmTo.isEmpty()){ // не было ошибок, надо выполнить запрос
             // перебрать все последовательности и найти те, в которых присутствуют обе станции
-//            System.out.println("--------------------90--------------------------");
             boolean successOrNot = false;
             for (RwStationsTrainSequence sequence : fullTrainsSequencesAList) {
                 if (sequence.getSequenceRwStations().contains(rwstationNameFromFmDB.getNameRailwayStationBahnhof())
@@ -101,7 +96,6 @@ public class RwStationsTrainSequenceService {
                     // разобрать последовательность станций на элементы массива
                     // на вход приходит String типа: ZURICH;12:23;12:23;GENEVA;23:50;23:58;BASEL;04:04;04:04
                     String[] elementsOfSequence = sequence.getSequenceRwStations().split(";");
-//                    System.out.println("---------------String[] elementsOfSequence:" + Arrays.toString(elementsOfSequence));
                     // если обе станции есть, то надо проверить, что искомая станция отправления раньше, чем назначения
                     int indexFrom = -1;
                     int indexTo = -2;
@@ -120,15 +114,14 @@ public class RwStationsTrainSequenceService {
                             break;
                         }
                     }
-//                    System.out.println("--------115---------------------------foundSmthng:" + foundSmthng);
                     // правильно: если индекс станции ОТ/From меньше чем индекс станции ДО/To
-                    // если нашлась хоть одна последовательность по названию станций, то foundSmthng будет больше двух
+                    // если нашлась хоть одна последовательность по названию станций, то foundSmthng будет два или больше
                     if (foundSmthng > 1){
                         if (indexFrom < indexTo){
                             // проверить временные интервалы - попадаем ли
                             if (timeFromIntInputed <= sequenceTimeFrom && sequenceTimeFrom != -3){
                                 if (timeToIntInputed >= sequenceTimeTo && sequenceTimeTo != -4){
-                                    // найден искомый вариант поезда, проходящего от станции A до станции B в заданный промежуток времени
+                // найден искомый вариант поезда, проходящего от станции A до станции B в заданный промежуток времени
                                     int setStationName = 0;
                                     int setTimeArr = 1;
                                     int setTimeDep = 2;
@@ -139,8 +132,6 @@ public class RwStationsTrainSequenceService {
                                     sequenceDtoBlank.setDepartureTime("---- ПОЕЗДА <------");
                                     sequenceDtoFmToAList.add(sequenceDtoBlank);
                                     for (int i = indexFrom; i <= (indexTo+2); i+=3) {
-//                                        System.out.println("*********--------от станции A до станции B----------:"
-//                                                + elementsOfSequence[i]);
                                         SequenceDto sequenceDto = new SequenceDto();
                                         sequenceDto.setTrainNumber(sequence.getSequenceTrainNumber());
                                         sequenceDto.setRwstationName(elementsOfSequence[i+setStationName]);
@@ -155,10 +146,10 @@ public class RwStationsTrainSequenceService {
                     }
                 }
             }
-            System.out.println("-----------ResultDto sequenceDtoFmToAList:" + sequenceDtoFmToAList);
+            LOGGER.info("-----------ResultDto sequenceDtoFmToAList:" + sequenceDtoFmToAList);
             if (successOrNot){
                 resultsEnumListFmTo.add(Results.SUCCESS_SEQUENCE_FROM_TO.getResultText());
-                System.out.println("---------------ResultDto--------success-------resultDtoFmTo:" + resultDtoFmTo);
+                LOGGER.info("---------------ResultDto--------success-------resultDtoFmTo:" + resultDtoFmTo);
             } else {
                 resultsEnumListFmTo.add(Results.ERROR_SEQUENCE_FROM_TO_NOT_FOUND.getResultText());
                 SequenceDto sequenceDtoBlank = new SequenceDto();
@@ -167,11 +158,10 @@ public class RwStationsTrainSequenceService {
                 sequenceDtoBlank.setArrivalTime("*** ВАРИАНТ");
                 sequenceDtoBlank.setDepartureTime("*** ПОЕЗДА <---=");
                 sequenceDtoFmToAList.add(sequenceDtoBlank);
-                System.out.println("---------------ResultDto-------Not-success-------resultDtoFmTo:" + resultDtoFmTo);
+                LOGGER.info("---------------ResultDto-------Not-success-------resultDtoFmTo:" + resultDtoFmTo);
             }
         }
-
-        System.out.println("-----------------ResultDto findFmToRwstationHandler finished");
+        LOGGER.info("-----------------ResultDto findFmToRwstationHandler finished");
         return resultDtoFmTo;
     }
 
@@ -195,14 +185,11 @@ public class RwStationsTrainSequenceService {
 
     public String[] getDepTimeByDepStationAndArrTimeByArrStationFmSequence(String stationDep, String stationArr
             , String sequence){
-//        System.out.println("------198-------getDepTimeByDepStationAndArrTime sequence:" + sequence);
-//        System.out.println("------199-------getDepTimeByDepStationAndArrTime stationDep:" + stationDep);
         String[] result = new String[2];
         String[] sequenceDetails = sequence.split(";");
         for (int i = 0; i < sequenceDetails.length; i++) {
             if (sequenceDetails[i].equals(stationDep)){
                 result[0] = sequenceDetails[i+2];
-//                System.out.println("------205-------getDepTimeByDepStationAndArrTime result[0]:" + result[0]);
             }
             if (sequenceDetails[i].equals(stationArr)){
                 result[1] = sequenceDetails[i+1];
@@ -212,7 +199,7 @@ public class RwStationsTrainSequenceService {
     }
 
     public ResultDto getTimeFmStringToInt(String timeString){
-        System.out.println("****************---ResultDto getTimeFmStringToInt started");
+        LOGGER.info("****************---ResultDto getTimeFmStringToInt started");
         ResultDto resultDto = new ResultDto();
         ArrayList<String> resultsEnumList = new ArrayList<>();
         resultDto.setResultsEnumList(resultsEnumList);
@@ -249,7 +236,7 @@ public class RwStationsTrainSequenceService {
                 resultDto.setResultsInt(timeBuffer);
             }
         }
-        System.out.println("****************---ResultDto getTimeFmStringToInt finished");
+        LOGGER.info("****************---ResultDto getTimeFmStringToInt finished");
         return resultDto;
     }
 }

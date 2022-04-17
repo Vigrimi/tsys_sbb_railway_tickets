@@ -22,11 +22,6 @@ public class EMailService {
     @Autowired
     public EMailService() {}
 
-    /*public EMailService(String emailUsername, String emailPassword) {
-        this.emailUsername = emailUsername;
-        this.emailPassword = emailPassword;
-    }*/
-
     // отправка мэйла с аттаченным файлом
     public void sendFileMail(String textSubject, String textMail, String fileNameAndPath)
             throws MessagingException, UnsupportedEncodingException {
@@ -55,31 +50,28 @@ public class EMailService {
         Message message = new MimeMessage(session);
         //От кого
         message.setFrom(new InternetAddress("ptpsk@yandex.ru","SBB RAILWAYS (no reply)"));
-        //Кому
+        //Кому - настроить нужный мэйл каждому клиенту
         message.setRecipient(Message.RecipientType.TO, new InternetAddress("ptpsk@yandex.ru"));
         //Тема письма
         message.setSubject(textSubject);
 
-        /*//Текст письма
-        message.setText(textMail); // "Hello, Email!"*/
-
         //Файл вложения
         File file = new File(fileNameAndPath);
-//Собираем содержимое письма из кусочков
+        //Собираем содержимое письма из кусочков
         MimeMultipart multipart = new MimeMultipart();
-//Первый кусочек - текст письма
+        //Первый кусочек - текст письма
         MimeBodyPart part1 = new MimeBodyPart();
         part1.addHeader(textSubject, "text/plain; charset=UTF-8"); // "Content-Type"
         part1.setDataHandler(new DataHandler
                 (textMail, "text/plain; charset=\"utf-8\"")); // "Письмо с файлом!!"
         multipart.addBodyPart(part1);
 
-//Второй кусочек - файл
+        //Второй кусочек - файл
         MimeBodyPart part2 = new MimeBodyPart();
         part2.setFileName(MimeUtility.encodeWord(file.getName()));
         part2.setDataHandler(new DataHandler(new FileDataSource(file)));
         multipart.addBodyPart(part2);
-//Добавляем оба кусочка в сообщение
+        //Добавляем оба кусочка в сообщение
         message.setContent(multipart);
 
         //Поехали!!!

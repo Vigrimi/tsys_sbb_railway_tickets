@@ -9,10 +9,8 @@ import ru.inbox.vinnikov.tsys_sbb_railway_tickets.enums.IntConstants;
 import ru.inbox.vinnikov.tsys_sbb_railway_tickets.enums.Results;
 import ru.inbox.vinnikov.tsys_sbb_railway_tickets.repository.RwStationsTrainSequenceRepository;
 import ru.inbox.vinnikov.tsys_sbb_railway_tickets.repository.TrainRepository;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-
 import static ru.inbox.vinnikov.tsys_sbb_railway_tickets.TsysSbbRailwayTicketsApplication.LOGGER;
 
 @Service
@@ -49,12 +47,6 @@ public class TrainService {
 
     public int serviceAddNewTrainHandler(String trainNumber, int passengersCapacity,
                                          String[] inputedData, int inputedRouteQtyStations){
-        // добавляем каждый новый поезд с рейсами на 45 ДНЕЙ!!!!!!!!!
-        ResultDto resultDto = new ResultDto();
-        ArrayList<String> resultsEnumList = new ArrayList<>();
-        resultDto.setResultsEnumList(resultsEnumList);
-
-        TrainZug newTrainFromDB = new TrainZug();
         long trainId = 0L;
         int result = -2;
         int successTimetableSavedInDB = 0;
@@ -62,6 +54,13 @@ public class TrainService {
         int errorTrainNumberAlreadyExistInDB = 2;
         int successTrainNumberSaved = 3;
         int errorMystique = 4;
+
+        // добавляем каждый новый поезд с рейсами на 20 ДНЕЙ!!!!!!!!! IntConstants VOYAGE_LENGTH(20),
+        ResultDto resultDto = new ResultDto();
+        ArrayList<String> resultsEnumList = new ArrayList<>();
+        resultDto.setResultsEnumList(resultsEnumList);
+
+        TrainZug newTrainFromDB = new TrainZug();
 
         // внести в базу новый номер поезда
         if (trainNumber == null || trainNumber.isBlank() || trainNumber.isEmpty())
@@ -131,7 +130,7 @@ public class TrainService {
         if (result != successTimetableSavedInDB){
             trainRepository.delete(newTrainFromDB);
         }
-        System.out.println("-------serviceAddNewTrainHandler-----success=0----- result:" + result);
+        LOGGER.info("-------serviceAddNewTrainHandler-----success=0----- result:" + result);
         return result;
     }
 

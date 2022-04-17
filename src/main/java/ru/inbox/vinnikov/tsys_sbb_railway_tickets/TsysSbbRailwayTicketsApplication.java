@@ -23,10 +23,10 @@ public class TsysSbbRailwayTicketsApplication {
 		LOGGER.info("\n ===============================> sbb tickets finished -> " + LocalDateTime.now());
 
 		// TODO включить ватсап при демонстрации + тикет сервис
-//		LOGGER.info("\n ==whatsAppService=============================> sbb tickets started -> " + LocalDateTime.now());
-//		WhatsAppService whatsAppService = new WhatsAppService();
-//		whatsAppService.runWhatsapWeb();
-//		LOGGER.info("\n ==whatsAppService=============================> sbb tickets finished -> " + LocalDateTime.now());
+		/*LOGGER.info("\n ==whatsAppService=============================> sbb tickets started -> " + LocalDateTime.now());
+		WhatsAppService whatsAppService = new WhatsAppService();
+		whatsAppService.runWhatsapWeb();
+		LOGGER.info("\n ==whatsAppService=============================> sbb tickets finished -> " + LocalDateTime.now());*/
 	}
 
 }

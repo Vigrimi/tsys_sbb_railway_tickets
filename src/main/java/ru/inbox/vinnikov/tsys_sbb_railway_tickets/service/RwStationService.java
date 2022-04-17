@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.inbox.vinnikov.tsys_sbb_railway_tickets.dto.ScheduleOnRwstationDto;
 import ru.inbox.vinnikov.tsys_sbb_railway_tickets.entity.RailwayStationBahnhof;
 import ru.inbox.vinnikov.tsys_sbb_railway_tickets.entity.TimetableZeitplan;
+import ru.inbox.vinnikov.tsys_sbb_railway_tickets.enums.IntConstants;
 import ru.inbox.vinnikov.tsys_sbb_railway_tickets.repository.RwStationRepository;
 import ru.inbox.vinnikov.tsys_sbb_railway_tickets.repository.TimetableRepository;
 
@@ -48,15 +49,9 @@ public class RwStationService {
     }
 
     public int serviceAddNewRwstationNameHandler(String rwstationName){
-        //TODO перенести в класс констант
-        int RWSTATION_NAME_NOT_INPUTED = 1;
-        int RWSTATION_NAME_ALREADY_EXISTS_IN_DB = 2;
-        int NEW_RWSTATION_NAME_SAVED_IN_DB = 3;
-        int NEW_RWSTATION_NAME_SMTHNG_GOES_WRONG = 4;
-
         if (rwstationName == null || rwstationName.isBlank() || rwstationName.isEmpty())
-        {
-            return RWSTATION_NAME_NOT_INPUTED; // "result", "ОШИБКА! Название станции не указано!"
+        { // "result", "ОШИБКА! Название станции не указано!"
+            return IntConstants.RWSTATION_NAME_NOT_INPUTED.getDigits();
         } else {
             rwstationName = rwstationName.toUpperCase();
             RailwayStationBahnhof newStation = new RailwayStationBahnhof();
@@ -66,20 +61,23 @@ public class RwStationService {
                 RailwayStationBahnhof stationFromDB = rwStationRepository.findByRwStationName(rwstationName);
                 LOGGER.info(LocalDateTime.now() + "\n ---------trainFromDB->" + stationFromDB);
                 if (stationFromDB != null){
-                    return RWSTATION_NAME_ALREADY_EXISTS_IN_DB; // "error", "ОШИБКА! Название такой станции уже есть в базе!"
+                    // "error", "ОШИБКА! Название такой станции уже есть в базе!"
+                    return IntConstants.RWSTATION_NAME_ALREADY_EXISTS_IN_DB.getDigits();
                 } else {
-                    // TODO: проверять бы точно записался?
+                    // проверять бы точно записался?
                     rwStationRepository.save(newStation);
-                    return NEW_RWSTATION_NAME_SAVED_IN_DB; // "success", "ПОЗДРАВЛЯЕМ! Новое название станции успешно сохранено в базе!"
+                    // "success", "ПОЗДРАВЛЯЕМ! Новое название станции успешно сохранено в базе!"
+                    return IntConstants.NEW_RWSTATION_NAME_SAVED_IN_DB.getDigits();
                 }
             } catch (Exception se){
-                return NEW_RWSTATION_NAME_SMTHNG_GOES_WRONG; // "error", "ОШИБКА! Что-то пошло не так %() название станции НЕ сохранилось в базе!"
+                // "error", "ОШИБКА! Что-то пошло не так %() название станции НЕ сохранилось в базе!"
+                return IntConstants.NEW_RWSTATION_NAME_SMTHNG_GOES_WRONG.getDigits();
             }
         }
     }
 
     public ArrayList<ScheduleOnRwstationDto> getScheduleOnRwstationHandler(String rwstationName){
-        System.out.println("---start----------------------------------getScheduleOnRwstationHandler-------");
+        LOGGER.info("---start----------------------------------getScheduleOnRwstationHandler-------");
         ArrayList<ScheduleOnRwstationDto> schedulesDtoList = new ArrayList<>();
         // искать станцию в БД - нужен будет айди
         RailwayStationBahnhof stationFromDB = rwStationRepository.findByRwStationName(rwstationName);
@@ -99,7 +97,7 @@ public class RwStationService {
             // взять из базы все расписания по станции
             ArrayList<TimetableZeitplan> schedulesListFromDB =
                     timetableRepository.findAllByCurrentRwstationId(rwstationId);
-            System.out.println("=======getScheduleOnRwstationHandler==================schedulesListFromDB:\n"
+            LOGGER.info("=======getScheduleOnRwstationHandler==================schedulesListFromDB:\n"
                     + schedulesListFromDB);
             // перебрать каждое расписание из БД в ДТО
             if (schedulesListFromDB.isEmpty()){ // станция есть в БД, но по ней нет расписания
@@ -109,7 +107,6 @@ public class RwStationService {
                 schedule.setCurrentStationArrTime   ("станции");
                 schedule.setCurrentStationDepTime   ("нет");
                 schedule.setNextStationName         ("поездов");
-
                 schedule.setCurrentStationName("N/A");
                 schedulesDtoList.add(schedule);
             } else {
@@ -140,9 +137,7 @@ public class RwStationService {
                 }
             }
         }
-        System.out.println("---end----------------------------------getScheduleOnRwstationHandler-------");
-        // проверка Кафки
-//        kafkaProducerService.sendMsg(1L,schedulesDtoList.get(0));
+        LOGGER.info("---end----------------------------------getScheduleOnRwstationHandler-------");
         return schedulesDtoList;
     }
 

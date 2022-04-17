@@ -69,7 +69,7 @@ public class SeatInTrainService {
                 seatInTrainRepository.saveAllAndFlush(seatsOneVoyageAList);
                 resultDto.setResultsInt(IntConstants.SUCCESS_INT.getDigits());
             } catch (Exception e){
-                // TODO класть в лист ошибок seatInTrain который не сохранился, потом пробовать сохранить снова
+                // класть в лист ошибок seatInTrain который не сохранился, потом пробовать сохранить снова
                 // ERROR_DB_MYSTIQUE("ОШИБКА! Что-то пошло не так %() с подключением к базе!")
                 resultsEnumList.add(Results.ERROR_DB_MYSTIQUE.getResultText());
                 resultDto.setResultsInt(IntConstants.ERROR_INT.getDigits());

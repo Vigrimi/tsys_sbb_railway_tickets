@@ -110,12 +110,18 @@
     <br><p>Выберите номер нужного поезда:</p>
     <!--<br><input size="55" type="text" placeholder="Введите номер выбранного поезда..." name="trainNumber"><br><br>-->
     <p></p>
+
+<div>
     <ul class="spisok_ver3" th:each ="train : ${trains}">
         <li>
-            <input type="radio" name="trainNumber" th:value="${train.numberTrainNummerZug}"> <p th:text="${train.numberTrainNummerZug}"></p>
+            <input type="radio" name="trainNumber" th:value="${train.numberTrainNummerZug}">
+            <p th:text="${train.numberTrainNummerZug}"></p>
         </li>
     </ul>
     <p>.</p><p>.</p>
+</div>
+    <br><br><br>
+    <div>
     <br><p>Введите выбранную станцию отправления</p>
     <input size="55" type="text" placeholder="Введите выбранную станцию отправления..." name="rwstationDeparture"><br><br>
     Введите выбранную станцию назначения
@@ -127,7 +133,7 @@
                 var today = new Date().toISOString().split('T')[0];
                 document.getElementsByName("departureDate")[0].setAttribute('min', today);</script>
     <br><br><input type="submit" value="Выбрать">
-</form><br><br>
+    </div></form><br><br>
 <!--результат проверки возможно ли купить билет-->
 <div th:if="${resultNewTicket}" th:text="${resultNewTicket}"></div>
 <div th:if="${priceNewTicket}" th:text="${priceNewTicket}"></div>

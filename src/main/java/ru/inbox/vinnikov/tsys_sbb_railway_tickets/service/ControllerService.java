@@ -34,9 +34,8 @@ public class ControllerService {
         this.encoder = encoder;
     }
 //----------------------------------------------------------------------------------------
-    //TODO поменять POST запросы на GET где идёт простой поиск из БД
+
     public String[][] getRegistrationHandlerInfo(int language){
-        //int qtyInfoSlots = 3;
         String languageZone = getLanguageZone(language);
         String[][] infoArr = {
                 {"1","2","3","4"}, // запасной
@@ -110,9 +109,6 @@ public class ControllerService {
         resultDto.setResultsEnumList(resultsEnumList);
 
         String[][] infoArr = getRegistrationHandlerInfo(language);
-//        String languageZone = controllerService.getLanguageZone(language); // "de", "ru", etc...
-        //String redirectLogin = "redirect:/sbb/v1/login_" + languageZone;
-        //String errorRegistration = "registration_" + languageZone;
         if (user.getLogin().length() < 6)
         {
             /*"ОШИБКА! Длина логина должна быть более 5ти символов!\n"*/
@@ -141,8 +137,6 @@ public class ControllerService {
                 resultDto.setSomeText("redirect:/sbb/v1/login_" + infoArr[language][0]);
             }
         }
-//        System.out.println("---------registration------language:" + language);
-//        System.out.println("---------registration------user:" + user);
         return resultDto;
     }
 }

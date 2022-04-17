@@ -30,10 +30,7 @@ public class CustomUserDetailsService implements UserDetailsService
 
         return User.builder()
                 .username(fromDb.getLogin())
-                .password(fromDb.getPassword()) // спринг-секьюрити сам возьмёт пароль из базы и сравнит с вводимым значением
-                .roles(fromDb.getRole().getRoleName().split("_")[1]) // передаём роли - они String, у пользователя
-      // может быть несколько ролей, и префикс "ROLE_" спринг-секьюрити подставит сам, и если мы передадим ROLE_USER,
-                // то будет ошибка программы, надо передавать просто USER
-                .build();
+                .password(fromDb.getPassword())
+                .roles(fromDb.getRole().getRoleName().split("_")[1]).build();
     }
 }

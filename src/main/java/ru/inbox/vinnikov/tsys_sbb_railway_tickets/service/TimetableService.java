@@ -37,9 +37,9 @@ public class TimetableService implements DateAndTimeHandler {
     //--------------------------------------------------------------
     public int serviceAddNewScheduleHandler(String[] inputedData, TrainZug newTrainFromDB,
                                                           int inputedRouteQtyStations){
-        System.out.println("------------serviceAddNewScheduleHandler begins----------");
+        LOGGER.info("------------serviceAddNewScheduleHandler begins----------");
         String resultString = "";
-        // коды ошибок для атрибута модели
+        // коды ошибок для атрибута модели - перенести в константы и собирать ошибки в Лист
         int resultSchedule = -1;
         int indexStations = 0;
         int fullSuccess = 0;
@@ -81,7 +81,7 @@ public class TimetableService implements DateAndTimeHandler {
             TimetableZeitplan timetableZeitplan = new TimetableZeitplan();
             // !!!!!!!!!!!!!!!!!!!!!!!! станция отправления
             if (i == 0){ // станция отправления
-                System.out.println("--------------станция отправления----i:" + i);
+                LOGGER.info("--------------станция отправления----i:" + i);
 
                 if (inputedData[i] == null || inputedData[i].isBlank() || inputedData[i].isEmpty()){
                     // "error", "ОШИБКА! Вы не ввели станцию отправления!"
@@ -177,14 +177,14 @@ public class TimetableService implements DateAndTimeHandler {
                 sequenceOfRwStations = sequenceOfRwStations + time + ";" + time + ";";
                 // все данные в расписание по станции отправления введены
                 timetablesList.add(timetableZeitplan);
-                System.out.println("------------serviceAddNewScheduleHandler timetablesList:" + timetablesList);
+                LOGGER.info("------------serviceAddNewScheduleHandler timetablesList:" + timetablesList);
             }
             // !!!!!!!!!!!!!!!!!!!!!!!!!!!!! промежуточные станции
             else if (i < (inputedData.length-2)){ // промежуточные станции
                 if (i == 3) i = 2; // первая станция после станции отправления - не было времени прибытия
-                System.out.println("--------------промежуточные станции----i:" + i);
+                LOGGER.info("--------------промежуточные станции----i:" + i);
                 if (inputedData[i] == null && inputedData[i+1] == null && inputedData[i+2] == null){
-                    System.out.println("--------------промежуточные станции----всё нал, пропускаем");
+                    LOGGER.info("--------------промежуточные станции----всё нал, пропускаем");
                 } else {
                     timetableZeitplan.setTrainIdZugId(newTrainFromDB);
                     // так как это станция промежуточная, то текущая станция это взять из Листа c этим индексом,
@@ -257,7 +257,7 @@ public class TimetableService implements DateAndTimeHandler {
 
                     String timeArrTime = timeArr.replaceAll(":","");
                     String timeDepTime = timeDep.replaceAll(":","");
-                    System.out.println("-------------timeArrTime--timeDepTime-:" + timeArrTime + "**" + timeDepTime);
+                    LOGGER.info("-------------timeArrTime--timeDepTime-:" + timeArrTime + "**" + timeDepTime);
                     int timeArrTime1 = -1;
                     int timeDepTime1 = -2;
                     try {
@@ -311,12 +311,12 @@ public class TimetableService implements DateAndTimeHandler {
                     sequenceOfRwStations = sequenceOfRwStations + timeArr + ";" + timeDep + ";";
                     // все данные в расписание по станции отправления введены
                     timetablesList.add(timetableZeitplan);
-                    System.out.println("------------serviceAddNewScheduleHandler timetablesList:" + timetablesList);
+                    LOGGER.info("------------serviceAddNewScheduleHandler timetablesList:" + timetablesList);
                 }
             }
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! конечная станция
             else if (i == (inputedData.length-2)) { // конечная станция
-                System.out.println("--------------конечная станция----i:" + i);
+                LOGGER.info("--------------конечная станция----i:" + i);
                 if (inputedData[i] == null || inputedData[i].isEmpty() || inputedData[i].isBlank()){
                     // "error", "ОШИБКА! Вы не ввели конечную станцию!"
                     resultSchedule = errorNoEndSt;
@@ -371,11 +371,11 @@ public class TimetableService implements DateAndTimeHandler {
                 sequenceOfRwStations = sequenceOfRwStations + time + ";" + time;
                 // все данные в расписание по станции отправления введены
                 timetablesList.add(timetableZeitplan);
-                System.out.println("------------serviceAddNewScheduleHandler timetablesList:" + timetablesList);
+                LOGGER.info("------------serviceAddNewScheduleHandler timetablesList:" + timetablesList);
             }
         }
-        System.out.println("--TOTAL-----serviceAddNewScheduleHandler-----timetablesList:" + timetablesList);
-        System.out.println("--TOTAL-----serviceAddNewScheduleHandler-----rwStationList:" + rwStationsList);
+        LOGGER.info("--TOTAL-----serviceAddNewScheduleHandler-----timetablesList:" + timetablesList);
+        LOGGER.info("--TOTAL-----serviceAddNewScheduleHandler-----rwStationList:" + rwStationsList);
 
         // проверка, подряд две станции не могут быть одинаковыми
         for (int i = 1; i < rwStationsList.size(); i++) {
@@ -389,7 +389,7 @@ public class TimetableService implements DateAndTimeHandler {
 
         // сохранить расписания в БД, если нет ошибок
         // всё ОК: --TOTAL-----serviceAddNewScheduleHandler-----resultSchedule:-1
-        System.out.println("--сохранить расписания в БД, если нет ошибок(-1)-----serviceAddNewScheduleHandler-----resultSchedule:" + resultSchedule);
+        LOGGER.info("--сохранить расписания в БД, если нет ошибок(-1)-----serviceAddNewScheduleHandler-----resultSchedule:" + resultSchedule);
         if (resultSchedule == -1){
             try {
                 for (TimetableZeitplan timetable : timetablesList) {
@@ -418,8 +418,8 @@ public class TimetableService implements DateAndTimeHandler {
             }
         }
 
-        System.out.println("--TOTAL-----serviceAddNewScheduleHandler-----stationsTrainSequence:" + stationsTrainSequence);
-        System.out.println("--TOTAL-----serviceAddNewScheduleHandler-----resultSchedule:" + resultSchedule);
+        LOGGER.info("--TOTAL-----serviceAddNewScheduleHandler-----stationsTrainSequence:" + stationsTrainSequence);
+        LOGGER.info("--TOTAL-----serviceAddNewScheduleHandler-----resultSchedule:" + resultSchedule);
         return resultSchedule;
     }
 
@@ -442,14 +442,14 @@ public class TimetableService implements DateAndTimeHandler {
         if (timeDeparture == null){
             available = false;
         } else if (timeDeparture.isBefore(timeNow)){ // поезд уже ушёл
-            System.out.println("---------------поезд уже ушёл:" + timeDeparture.isBefore(timeNow));
+            LOGGER.info("---------------поезд уже ушёл:" + timeDeparture.isBefore(timeNow));
             available = false;
         } else if ( !timeDeparture.isBefore(timeNow) && // менее десяти минут до отправления - билет не купить
                 ChronoUnit.MINUTES.between(timeDeparture, timeNow) >= tenMinutesBeforeDeparture ){
-            System.out.println("------------менее десяти минут:" + ChronoUnit.MINUTES.between(timeDeparture, timeNow));
+            LOGGER.info("------------менее десяти минут:" + ChronoUnit.MINUTES.between(timeDeparture, timeNow));
             available = false;
         }
-        System.out.println("------------available:" + available);
+        LOGGER.info("------------available:" + available);
         return available;
     }
 }

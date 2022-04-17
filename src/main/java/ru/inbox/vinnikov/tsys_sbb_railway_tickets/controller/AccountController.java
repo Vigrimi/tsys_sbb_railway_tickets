@@ -40,21 +40,18 @@ public class AccountController {
     @GetMapping("/login_de")
     public String getLoginDeForm() {
         language = Languages.DEUTSCH.getLanguageId();
-//        System.out.println("----LANGUAGE_DEUTCH(1)------------------language:" + language);
         return "login_de";
     }
 
     @GetMapping("/login_ru")
     public String getLoginRuForm() {
         language = Languages.RUSSIAN.getLanguageId();
-//        System.out.println("----LANGUAGE_RUSSIAN(2)------------------language:" + language);
         return "login_ru";
     }
 
     @GetMapping("/login_uk")
     public String getLoginUkForm() {
         language = Languages.ENGLISH.getLanguageId();
-//        System.out.println("----LANGUAGE_ENGLISH(3)------------------language:" + language);
         return "login_uk";
     }
 
