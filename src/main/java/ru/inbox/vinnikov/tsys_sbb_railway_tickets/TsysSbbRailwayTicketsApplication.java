@@ -2,7 +2,6 @@ package ru.inbox.vinnikov.tsys_sbb_railway_tickets;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import ru.inbox.vinnikov.tsys_sbb_railway_tickets.service.WhatsAppService;
 
 import java.time.LocalDateTime;
 

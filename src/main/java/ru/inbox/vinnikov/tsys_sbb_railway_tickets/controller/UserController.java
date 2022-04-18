@@ -1,7 +1,6 @@
 package ru.inbox.vinnikov.tsys_sbb_railway_tickets.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.MailException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,12 +14,14 @@ import ru.inbox.vinnikov.tsys_sbb_railway_tickets.entity.TicketFahrkarte;
 import ru.inbox.vinnikov.tsys_sbb_railway_tickets.enums.IntConstants;
 import ru.inbox.vinnikov.tsys_sbb_railway_tickets.repository.RwStationsTrainSequenceRepository;
 import ru.inbox.vinnikov.tsys_sbb_railway_tickets.repository.TrainRepository;
-import ru.inbox.vinnikov.tsys_sbb_railway_tickets.service.*;
-import java.security.Principal;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
+import ru.inbox.vinnikov.tsys_sbb_railway_tickets.service.PassengerService;
+import ru.inbox.vinnikov.tsys_sbb_railway_tickets.service.RwStationService;
+import ru.inbox.vinnikov.tsys_sbb_railway_tickets.service.RwStationsTrainSequenceService;
+import ru.inbox.vinnikov.tsys_sbb_railway_tickets.service.TicketService;
 
-import static ru.inbox.vinnikov.tsys_sbb_railway_tickets.TsysSbbRailwayTicketsApplication.LOGGER;
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("/sbb/v1/user")
@@ -150,7 +151,7 @@ public class UserController {
     public String userScheduleOnRwstationHandler(String rwstationName,Model model){
         String textForScoreboard = "Информация по станции: " + rwstationName.toUpperCase();
         model.addAttribute("rwstationName", textForScoreboard);
-        ArrayList<ScheduleOnRwstationDto> scheduleDto = rwStationService.getScheduleOnRwstationHandler(rwstationName);
+        List<ScheduleOnRwstationDto> scheduleDto = rwStationService.getScheduleOnRwstationHandler(rwstationName);
         model.addAttribute("schedules", scheduleDto);
         return "schedule_on_rwstation_handler";
     }

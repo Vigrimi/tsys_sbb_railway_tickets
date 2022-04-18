@@ -1,27 +1,21 @@
 package ru.inbox.vinnikov.tsys_sbb_railway_tickets.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import ru.inbox.vinnikov.tsys_sbb_railway_tickets.dto.PassengerInOneTrainDto;
 import ru.inbox.vinnikov.tsys_sbb_railway_tickets.dto.ResultDto;
 import ru.inbox.vinnikov.tsys_sbb_railway_tickets.entity.MyUser;
-import ru.inbox.vinnikov.tsys_sbb_railway_tickets.entity.RailwayStationBahnhof;
-import ru.inbox.vinnikov.tsys_sbb_railway_tickets.repository.RoleRepository;
 import ru.inbox.vinnikov.tsys_sbb_railway_tickets.repository.TrainRepository;
-import ru.inbox.vinnikov.tsys_sbb_railway_tickets.repository.UserRepository;
-import ru.inbox.vinnikov.tsys_sbb_railway_tickets.service.*;
+import ru.inbox.vinnikov.tsys_sbb_railway_tickets.service.AdminService;
+import ru.inbox.vinnikov.tsys_sbb_railway_tickets.service.PassengerService;
+import ru.inbox.vinnikov.tsys_sbb_railway_tickets.service.RwStationService;
+import ru.inbox.vinnikov.tsys_sbb_railway_tickets.service.TrainService;
 
 import java.security.Principal;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import static ru.inbox.vinnikov.tsys_sbb_railway_tickets.TsysSbbRailwayTicketsApplication.LOGGER;
 
@@ -58,42 +52,8 @@ public class AdminController {
         return "account_admin";
     }
 
-    // Просмотр всех пассажиров, зарегистрированных на поезд
-    @GetMapping("/account/find_all_passengers_in_one_train")
-    public String findAllPassengersInOneTrain(Model model)
-    {
-        //список актуальных номеров поездов
-        allTrainsNumbers = trainService.getAllTrainsNumbersStr();
-        model.addAttribute("trainsnames", allTrainsNumbers);
-        return "account_adminFind_all_passengers_in_one_train";
-    } // Просмотр всех пассажиров, зарегистрированных на поезд
-    @PostMapping("/account/find_all_passengers_in_one_train_handler")
-    public String findAllPassengersInOneTrainHandler(String trainNumber,String departureDate,Model model){
-        ResultDto resultDto = passengerService.serviceFindAllPassengersInOneTrainHandler(trainNumber,departureDate);
-        model.addAttribute("trainnumber", trainNumber);
-        model.addAttribute("result",resultDto.getResultsEnumList());
-        model.addAttribute("passengers",resultDto.getPassengerInOneTrainDtoList());
-        return "account_adminFind_all_passengers_in_one_train_handler";
-    }
-
     // Добавление новых станций
-    @GetMapping("/account/add_new_rwstation")
-    public String addNewRwStation(Model model)
-    {
-        allStationsNames = rwStationService.getAllStationsNamesStr();
-        model.addAttribute("allstations", allStationsNames);
-        return "account_adminAdd_new_rwstation";
-    }
-    @PostMapping("/account/add_new_rwstation_handler")
-    public String addNewRwStationHandler(String rwstationName, Model model)
-    {
-        // исправить на ResultDTO
-        int result = rwStationService.serviceAddNewRwstationNameHandler(rwstationName);
-        if (result == 3) allStationsNames = rwStationService.getAllStationsNamesStr();
-        model.addAttribute("result", resultArrAddNewRwSt[result]);
-        model.addAttribute("allstations", allStationsNames);
-        return "account_adminAdd_new_rwstation";
-    }
+
 
     // Добавление новых поездов: надо ввести НОМЕР ПОЕЗДА и ВМЕСТИМОСТЬ
     @GetMapping("/account/add_new_train")
